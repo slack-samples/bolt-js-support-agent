@@ -106,7 +106,7 @@ All implementations use [Biome](https://biomejs.dev/) for linting and formatting
 
 - **Bolt for JavaScript** (`@slack/bolt`) with Socket Mode for all Slack communication
 - **Listener registration** — `listeners/index.{js,ts}` calls sub-registrars for events, actions, and views
-- **Streaming responses** — DM and mention handlers use `client.chat.stream()` to show typing indicators
+- **Streaming responses** — DM and mention handlers use `client.chatStream()` to show typing indicators
 - **Emoji reactions** — `:eyes:` on first message, contextual emoji based on response content, `:white_check_mark:` on completion
 - **Feedback buttons** — Every agent response includes thumbs up/down buttons via `context_actions` blocks
 - **App Home** — 5 category buttons (Hardware, Software, Access, Network, Other) that open an issue submission modal

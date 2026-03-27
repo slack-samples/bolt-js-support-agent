@@ -46,7 +46,7 @@ export async function handleIssueSubmission({ ack, body, client, context, logger
     const deps = new CaseyDeps(client, userId, channelId, threadTs);
     const result = await run(caseyAgent, userMessage, { context: deps });
 
-    const streamer = await client.chat.stream({
+    const streamer = client.chatStream({
       channel: channelId,
       recipient_team_id: teamId,
       recipient_user_id: userId,

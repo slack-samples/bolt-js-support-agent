@@ -49,7 +49,7 @@ export async function handleMessage({ client, context, event, logger, say }) {
 
     const { responseText, sessionId: newSessionId } = await runCaseyAgent(text, existingSessionId);
 
-    const streamer = await client.chat.stream({
+    const streamer = client.chatStream({
       channel: channelId,
       recipient_team_id: teamId,
       recipient_user_id: userId,

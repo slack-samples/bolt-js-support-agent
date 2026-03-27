@@ -42,5 +42,5 @@ Same architecture as `js/openai-agents-sdk/` with TypeScript types added. See th
 - **Target**: `esnext`, **Module**: `nodenext`
 - **Bolt handler types**: `AllMiddlewareArgs & SlackEventMiddlewareArgs<'message'>`, etc.
 - **Interfaces**: `StoreEntry`, `KBArticle`, `SystemStatus`, `CaseyDeps`
-- **`noExplicitAny: off`** in Biome config — some `as any` casts are necessary for Bolt's union-typed event properties and `client.chat.stream()`
+- **`noExplicitAny: off`** in Biome config — some `as any` casts are necessary for Bolt's union-typed event properties and `client.chatStream()`
 - **`import type`** used for type-only imports

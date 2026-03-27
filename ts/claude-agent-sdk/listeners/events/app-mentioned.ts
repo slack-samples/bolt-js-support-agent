@@ -61,7 +61,7 @@ export async function handleAppMentioned({
     const existingSessionId = sessionStore.getSession(channelId, threadTs);
     const { responseText, sessionId: newSessionId } = await runCaseyAgent(cleanedText, existingSessionId ?? undefined);
 
-    const streamer = await (client.chat as any).stream({
+    const streamer = client.chatStream({
       channel: channelId,
       recipient_team_id: teamId,
       recipient_user_id: userId,

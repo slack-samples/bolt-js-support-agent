@@ -43,7 +43,7 @@ export async function handleIssueSubmission({ ack, body, client, context, logger
 
     const { responseText, sessionId: newSessionId } = await runCaseyAgent(userMessage);
 
-    const streamer = await client.chat.stream({
+    const streamer = client.chatStream({
       channel: channelId,
       recipient_team_id: teamId,
       recipient_user_id: userId,

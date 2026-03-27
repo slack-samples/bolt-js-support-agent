@@ -42,6 +42,5 @@ Same architecture as `js/claude-agent-sdk/` with TypeScript types added. See tha
 - **Target**: `esnext`, **Module**: `nodenext`
 - **Bolt handler types**: `AllMiddlewareArgs & SlackEventMiddlewareArgs<'message'>`, etc.
 - **Interfaces**: `StoreEntry`, `KBArticle`, `SystemStatus`
-- **`noExplicitAny: off`** in Biome config — some `as any` casts are necessary for Bolt's union-typed event properties and `client.chat.stream()`
 - **`import type`** used for type-only imports
 - **Zod v4** (`zod@^4.0.0`) required as a peer dependency of the Claude Agent SDK

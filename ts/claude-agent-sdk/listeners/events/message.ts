@@ -57,7 +57,7 @@ export async function handleMessage({
 
     const { responseText, sessionId: newSessionId } = await runCaseyAgent(text, existingSessionId ?? undefined);
 
-    const streamer = await (client.chat as any).stream({
+    const streamer = client.chatStream({
       channel: channelId,
       recipient_team_id: teamId,
       recipient_user_id: userId,
