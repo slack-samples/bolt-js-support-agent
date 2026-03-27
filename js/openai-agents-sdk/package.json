@@ -1,0 +1,21 @@
+{
+  "name": "bolt-js-support-agent-openai",
+  "version": "0.1.0",
+  "type": "module",
+  "license": "MIT",
+  "scripts": {
+    "start": "node app.js",
+    "dev": "node --watch app.js",
+    "lint": "npx @biomejs/biome check .",
+    "lint:fix": "npx @biomejs/biome check --write .",
+    "test": "node --test"
+  },
+  "dependencies": {
+    "@openai/agents": "^0.8.0",
+    "@slack/bolt": "^4.6.0",
+    "dotenv": "~17.3.1"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "^2.4.0"
+  }
+}

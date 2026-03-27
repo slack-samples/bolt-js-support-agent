@@ -1,0 +1,9 @@
+{
+  "compilerOptions": {
+    "target": "esnext",
+    "module": "nodenext",
+    "outDir": "./dist",
+    "strict": true,
+    "skipLibCheck": true
+  }
+}
