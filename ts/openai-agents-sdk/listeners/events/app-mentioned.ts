@@ -25,7 +25,7 @@ export async function handleAppMentioned({
   say,
 }: AllMiddlewareArgs & SlackEventMiddlewareArgs<'app_mention'>): Promise<void> {
   try {
-    const channelId = context.channelId as string;
+    const channelId = event.channel as string;
     const teamId = context.teamId as string;
     const text = event.text || '';
     const threadTs = event.thread_ts || event.ts;
@@ -52,11 +52,11 @@ export async function handleAppMentioned({
       thread_ts: threadTs,
       status: 'Thinking...',
       loading_messages: [
-        'Teaching the hamsters to type faster\u2026',
-        'Untangling the internet cables\u2026',
-        'Consulting the office goldfish\u2026',
-        'Polishing up the response just for you\u2026',
-        'Convincing the AI to stop overthinking\u2026',
+        'Teaching the hamsters to type faster...',
+        'Untangling the internet cables...',
+        'Consulting the office goldfish...',
+        'Polishing up the response just for you...',
+        'Convincing the AI to stop overthinking...',
       ],
     });
 
@@ -78,7 +78,7 @@ export async function handleAppMentioned({
     const feedbackBlocks = createFeedbackBlock();
     await streamer.stop({ blocks: feedbackBlocks });
 
-    conversationStore.setHistory(channelId, threadTs, (result as any).toInputList());
+    conversationStore.setHistory(channelId, threadTs, result.history);
 
     if (Math.random() < 0.2) {
       const emoji = CONTEXTUAL_EMOJIS[Math.floor(Math.random() * CONTEXTUAL_EMOJIS.length)];

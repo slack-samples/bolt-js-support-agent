@@ -46,7 +46,7 @@ The agent is defined in `agent/support-agent.js` using the OpenAI Agents SDK:
 
 `conversation/store.js` exports a `ConversationStore` that stores **full message history** arrays in a `Map` keyed by `${channelId}:${threadTs}`. The store has TTL-based cleanup (1 hour) and a max entry limit (1000).
 
-After each agent run, `result.toInputList()` provides the updated history to store for the next turn.
+After each agent run, `result.history` provides the updated history to store for the next turn.
 
 ### Dependency Injection
 

@@ -49,11 +49,11 @@ export async function handleMessage({
       thread_ts: threadTs,
       status: 'Thinking...',
       loading_messages: [
-        'Teaching the hamsters to type faster\u2026',
-        'Untangling the internet cables\u2026',
-        'Consulting the office goldfish\u2026',
-        'Polishing up the response just for you\u2026',
-        'Convincing the AI to stop overthinking\u2026',
+        'Teaching the hamsters to type faster...',
+        'Untangling the internet cables...',
+        'Consulting the office goldfish...',
+        'Polishing up the response just for you...',
+        'Convincing the AI to stop overthinking...',
       ],
     });
 
@@ -74,7 +74,7 @@ export async function handleMessage({
     const feedbackBlocks = createFeedbackBlock();
     await streamer.stop({ blocks: feedbackBlocks });
 
-    conversationStore.setHistory(channelId, threadTs, (result as any).toInputList());
+    conversationStore.setHistory(channelId, threadTs, result.history);
 
     if (Math.random() < 0.3) {
       const emoji = CONTEXTUAL_EMOJIS[Math.floor(Math.random() * CONTEXTUAL_EMOJIS.length)];

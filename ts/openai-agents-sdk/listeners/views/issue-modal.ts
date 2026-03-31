@@ -36,11 +36,11 @@ export async function handleIssueSubmission({
       thread_ts: threadTs,
       status: 'Thinking...',
       loading_messages: [
-        'Teaching the hamsters to type faster\u2026',
-        'Untangling the internet cables\u2026',
-        'Consulting the office goldfish\u2026',
-        'Polishing up the response just for you\u2026',
-        'Convincing the AI to stop overthinking\u2026',
+        'Teaching the hamsters to type faster...',
+        'Untangling the internet cables...',
+        'Consulting the office goldfish...',
+        'Polishing up the response just for you...',
+        'Convincing the AI to stop overthinking...',
       ],
     });
 
@@ -63,7 +63,7 @@ export async function handleIssueSubmission({
     const feedbackBlocks = createFeedbackBlock();
     await streamer.stop({ blocks: feedbackBlocks });
 
-    conversationStore.setHistory(channelId, threadTs, (result as any).toInputList());
+    conversationStore.setHistory(channelId, threadTs, result.history);
   } catch (e) {
     logger.error(`Failed to handle issue submission: ${e}`);
   }

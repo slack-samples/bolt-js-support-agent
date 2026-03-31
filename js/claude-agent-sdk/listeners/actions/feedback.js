@@ -2,8 +2,8 @@ export async function handleFeedback({ ack, body, client, context, logger }) {
   await ack();
 
   try {
-    const channelId = context.channelId;
     const userId = context.userId;
+    const channelId = body.channel.id;
     const messageTs = body.message.ts;
     const feedbackValue = body.actions[0].value;
 

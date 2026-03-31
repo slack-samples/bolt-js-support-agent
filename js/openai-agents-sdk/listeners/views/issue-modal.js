@@ -14,9 +14,11 @@ export async function handleIssueSubmission({ ack, body, client, context, logger
     const category = values.category_block.category_select.selected_option.value;
     const description = values.description_block.description_input.value;
 
+    // Open a DM with the user
     const dm = await client.conversations.open({ users: userId });
     const channelId = dm.channel.id;
 
+    // Post the initial message with category and description
     const userMessage = `*Category:* ${category}\n*Description:* ${description}`;
     const initial = await client.chat.postMessage({
       channel: channelId,
@@ -24,28 +26,32 @@ export async function handleIssueSubmission({ ack, body, client, context, logger
     });
     const threadTs = initial.ts;
 
+    // Set assistant thread status with loading messages
     await client.assistant.threads.setStatus({
       channel_id: channelId,
       thread_ts: threadTs,
       status: 'Thinking...',
       loading_messages: [
-        'Teaching the hamsters to type faster\u2026',
-        'Untangling the internet cables\u2026',
-        'Consulting the office goldfish\u2026',
-        'Polishing up the response just for you\u2026',
-        'Convincing the AI to stop overthinking\u2026',
+        'Teaching the hamsters to type faster...',
+        'Untangling the internet cables...',
+        'Consulting the office goldfish...',
+        'Polishing up the response just for you...',
+        'Convincing the AI to stop overthinking...',
       ],
     });
 
+    // Add eyes reaction
     await client.reactions.add({
       channel: channelId,
       timestamp: threadTs,
       name: 'eyes',
     });
 
+    // Run the agent
     const deps = new CaseyDeps(client, userId, channelId, threadTs);
     const result = await run(caseyAgent, userMessage, { context: deps });
 
+    // Stream the response in thread with feedback buttons
     const streamer = client.chatStream({
       channel: channelId,
       recipient_team_id: teamId,
@@ -56,7 +62,8 @@ export async function handleIssueSubmission({ ack, body, client, context, logger
     const feedbackBlocks = createFeedbackBlock();
     await streamer.stop({ blocks: feedbackBlocks });
 
-    conversationStore.setHistory(channelId, threadTs, result.toInputList());
+    // Store conversation history
+    conversationStore.setHistory(channelId, threadTs, result.history);
   } catch (e) {
     logger.error(`Failed to handle issue submission: ${e}`);
   }

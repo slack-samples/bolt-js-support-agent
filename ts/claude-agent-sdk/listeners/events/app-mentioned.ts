@@ -23,7 +23,7 @@ export async function handleAppMentioned({
   say,
 }: AllMiddlewareArgs & SlackEventMiddlewareArgs<'app_mention'>): Promise<void> {
   try {
-    const channelId = context.channelId!;
+    const channelId = event.channel!;
     const teamId = context.teamId!;
     const text = event.text || '';
     const threadTs = event.thread_ts || event.ts;
@@ -50,11 +50,11 @@ export async function handleAppMentioned({
       thread_ts: threadTs,
       status: 'Thinking...',
       loading_messages: [
-        'Teaching the hamsters to type faster\u2026',
-        'Untangling the internet cables\u2026',
-        'Consulting the office goldfish\u2026',
-        'Polishing up the response just for you\u2026',
-        'Convincing the AI to stop overthinking\u2026',
+        'Teaching the hamsters to type faster...',
+        'Untangling the internet cables...',
+        'Consulting the office goldfish...',
+        'Polishing up the response just for you...',
+        'Convincing the AI to stop overthinking...',
       ],
     });
 

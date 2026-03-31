@@ -1,19 +1,18 @@
-import type { AllMiddlewareArgs, SlackActionMiddlewareArgs } from '@slack/bolt';
+import type { AllMiddlewareArgs, BlockAction, SlackActionMiddlewareArgs } from '@slack/bolt';
 
 export async function handleFeedback({
   ack,
   body,
   client,
-  context,
   logger,
-}: AllMiddlewareArgs & SlackActionMiddlewareArgs): Promise<void> {
+}: AllMiddlewareArgs & SlackActionMiddlewareArgs<BlockAction>): Promise<void> {
   await ack();
 
   try {
-    const channelId = context.channelId as string;
-    const userId = context.userId as string;
-    const messageTs = (body as any).message.ts;
-    const feedbackValue = (body as any).actions[0].value;
+    const channelId = body.channel?.id as string;
+    const userId = body.user.id;
+    const messageTs = body.message?.ts;
+    const feedbackValue = (body.actions[0] as { value?: string }).value;
 
     if (feedbackValue === 'good-feedback') {
       await client.chat.postEphemeral({
