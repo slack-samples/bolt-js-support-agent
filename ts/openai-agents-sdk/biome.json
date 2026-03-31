@@ -3,9 +3,7 @@
   "formatter": {
     "enabled": true,
     "formatWithErrors": false,
-    "includes": [
-      "**"
-    ],
+    "includes": ["**"],
     "attributePosition": "auto",
     "indentStyle": "space",
     "indentWidth": 2,

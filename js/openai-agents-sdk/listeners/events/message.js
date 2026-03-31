@@ -45,7 +45,7 @@ export async function handleMessage({ client, context, event, logger, say }) {
     await client.assistant.threads.setStatus({
       channel_id: channelId,
       thread_ts: threadTs,
-      status: 'Thinking...',
+      status: 'Thinking…',
       loading_messages: [
         'Teaching the hamsters to type faster…',
         'Untangling the internet cables…',

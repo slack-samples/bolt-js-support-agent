@@ -22,11 +22,14 @@ export async function handleMessage({
   logger,
   say,
 }: AllMiddlewareArgs & SlackEventMiddlewareArgs<'message'>): Promise<void> {
+  // Skip bot messages and message subtypes (edits, deletes, etc.)
   if ((event as any).bot_id || event.subtype) return;
+
+  // Only handle IM channel type
   if ((event as any).channel_type !== 'im') return;
 
   try {
-    const channelId = context.channelId!;
+    const channelId = event.channel;
     const teamId = context.teamId!;
     const text = (event as any).text || '';
     const threadTs = (event as any).thread_ts || (event as any).ts;
@@ -34,6 +37,7 @@ export async function handleMessage({
 
     const existingSessionId = sessionStore.getSession(channelId, threadTs);
 
+    // Add eyes reaction only to the first message in a thread
     if (!existingSessionId) {
       await client.reactions.add({
         channel: channelId,
@@ -42,21 +46,24 @@ export async function handleMessage({
       });
     }
 
+    // Set assistant thread status with loading messages
     await client.assistant.threads.setStatus({
       channel_id: channelId,
       thread_ts: threadTs,
-      status: 'Thinking...',
+      status: 'Thinking…',
       loading_messages: [
-        'Teaching the hamsters to type faster...',
-        'Untangling the internet cables...',
-        'Consulting the office goldfish...',
-        'Polishing up the response just for you...',
-        'Convincing the AI to stop overthinking...',
+        'Teaching the hamsters to type faster…',
+        'Untangling the internet cables…',
+        'Consulting the office goldfish…',
+        'Polishing up the response just for you…',
+        'Convincing the AI to stop overthinking…',
       ],
     });
 
+    // Run the agent
     const { responseText, sessionId: newSessionId } = await runCaseyAgent(text, existingSessionId ?? undefined);
 
+    // Stream response in thread with feedback buttons
     const streamer = client.chatStream({
       channel: channelId,
       recipient_team_id: teamId,
@@ -67,10 +74,12 @@ export async function handleMessage({
     const feedbackBlocks = createFeedbackBlock();
     await streamer.stop({ blocks: feedbackBlocks });
 
+    // Store conversation session
     if (newSessionId) {
       sessionStore.setSession(channelId, threadTs, newSessionId);
     }
 
+    // ~30% chance contextual emoji
     if (Math.random() < 0.3) {
       const emoji = CONTEXTUAL_EMOJIS[Math.floor(Math.random() * CONTEXTUAL_EMOJIS.length)];
       await client.reactions.add({
@@ -80,6 +89,7 @@ export async function handleMessage({
       });
     }
 
+    // Check for resolution phrases
     const outputLower = responseText.toLowerCase();
     if (RESOLUTION_PHRASES.some((phrase) => outputLower.includes(phrase))) {
       await client.reactions.add({

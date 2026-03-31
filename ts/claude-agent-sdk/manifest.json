@@ -4,7 +4,7 @@
   },
   "features": {
     "assistant_view": {
-      "assistant_description": "Hi, I am an agent built using Bolt and TypeScript. I am here to help you out!",
+      "assistant_description": "Hi, I am an agent built using Bolt for TypeScript. I am here to help you out!",
       "suggested_prompts": []
     },
     "app_home": {
@@ -34,12 +34,7 @@
   },
   "settings": {
     "event_subscriptions": {
-      "bot_events": [
-        "app_home_opened",
-        "app_mention",
-        "assistant_thread_started",
-        "message.im"
-      ]
+      "bot_events": ["app_home_opened", "app_mention", "assistant_thread_started", "message.im"]
     },
     "interactivity": {
       "is_enabled": true

@@ -34,7 +34,7 @@ export function buildIssueModal(category: string): any {
           type: 'plain_text_input',
           action_id: 'description_input',
           multiline: true,
-          placeholder: { type: 'plain_text', text: 'Describe your issue in detail...' },
+          placeholder: { type: 'plain_text', text: 'Describe your issue in detail…' },
         },
         label: { type: 'plain_text', text: 'Description' },
       },
