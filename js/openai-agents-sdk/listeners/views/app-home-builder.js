@@ -1,3 +1,11 @@
+/**
+ * @typedef {Object} Category
+ * @property {string} actionId
+ * @property {string} text
+ * @property {string} value
+ */
+
+/** @type {Category[]} */
 export const CATEGORIES = [
   {
     actionId: 'category_password_reset',
@@ -26,6 +34,10 @@ export const CATEGORIES = [
   },
 ];
 
+/**
+ * Build the App Home view for Casey.
+ * @returns {import('@slack/types').HomeView}
+ */
 export function buildAppHomeView() {
   const blocks = [
     {

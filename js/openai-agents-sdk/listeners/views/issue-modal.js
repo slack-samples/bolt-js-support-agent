@@ -4,6 +4,11 @@ import { CaseyDeps, caseyAgent } from '../../agent/index.js';
 import { conversationStore } from '../../conversation/index.js';
 import { createFeedbackBlock } from './feedback-block.js';
 
+/**
+ * Handle issue submission from the modal.
+ * @param {import('@slack/bolt').AllMiddlewareArgs & import('@slack/bolt').SlackViewMiddlewareArgs} args
+ * @returns {Promise<void>}
+ */
 export async function handleIssueSubmission({ ack, body, client, context, logger }) {
   await ack();
 

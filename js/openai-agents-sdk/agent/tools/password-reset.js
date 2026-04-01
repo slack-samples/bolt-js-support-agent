@@ -1,6 +1,7 @@
 import { tool } from '@openai/agents';
 import { z } from 'zod';
 
+/** Password reset tool for the Casey agent. */
 export const triggerPasswordReset = tool({
   name: 'trigger_password_reset',
   description:

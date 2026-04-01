@@ -1,6 +1,14 @@
 import { tool } from '@openai/agents';
 import { z } from 'zod';
 
+/**
+ * @typedef {Object} KBArticle
+ * @property {string} title
+ * @property {string} content
+ * @property {string} articleId
+ */
+
+/** @type {Record<string, KBArticle>} */
 const KB_ARTICLES = {
   vpn: {
     title: 'VPN Connection Troubleshooting',

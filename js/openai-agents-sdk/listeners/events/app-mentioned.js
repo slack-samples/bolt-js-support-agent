@@ -4,6 +4,7 @@ import { CaseyDeps, caseyAgent } from '../../agent/index.js';
 import { conversationStore } from '../../conversation/index.js';
 import { createFeedbackBlock } from '../views/feedback-block.js';
 
+/** @type {string[]} */
 const RESOLUTION_PHRASES = [
   'resolved',
   'that should fix',
@@ -13,8 +14,14 @@ const RESOLUTION_PHRASES = [
   'ticket created',
 ];
 
+/** @type {string[]} */
 const CONTEXTUAL_EMOJIS = ['+1', 'raised_hands', 'rocket', 'tada', 'bulb', 'fire'];
 
+/**
+ * Handle app_mention events and run the Casey agent.
+ * @param {import('@slack/bolt').AllMiddlewareArgs & import('@slack/bolt').SlackEventMiddlewareArgs<'app_mention'>} args
+ * @returns {Promise<void>}
+ */
 export async function handleAppMentioned({ client, context, event, logger, say }) {
   try {
     const channelId = event.channel;
@@ -57,6 +64,7 @@ export async function handleAppMentioned({ client, context, event, logger, say }
 
     // Get conversation history
     const history = conversationStore.getHistory(channelId, threadTs);
+    /** @type {string | import('@openai/agents').AgentInputItem[]} */
     const inputItems = history ? [...history, { role: 'user', content: cleanedText }] : cleanedText;
 
     // Run the agent

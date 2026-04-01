@@ -1,6 +1,7 @@
 import { tool } from '@openai/agents';
 import { z } from 'zod';
 
+/** Support ticket creation tool for the Casey agent. */
 export const createSupportTicket = tool({
   name: 'create_support_ticket',
   description:

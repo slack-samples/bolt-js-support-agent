@@ -1,6 +1,12 @@
 import { CATEGORIES } from './app-home-builder.js';
 
+/**
+ * Build the issue submission modal.
+ * @param {string | undefined} category - Pre-selected category, if any.
+ * @returns {import('@slack/types').ModalView}
+ */
 export function buildIssueModal(category) {
+  /** @type {import('@slack/types').PlainTextOption[]} */
   const categoryOptions = CATEGORIES.map((cat) => ({
     text: { type: 'plain_text', text: cat.value, emoji: true },
     value: cat.value,

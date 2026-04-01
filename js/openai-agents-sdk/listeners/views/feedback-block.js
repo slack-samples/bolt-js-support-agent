@@ -1,3 +1,7 @@
+/**
+ * Create the feedback buttons block for agent responses.
+ * @returns {import('@slack/types').KnownBlock[]}
+ */
 export function createFeedbackBlock() {
   return [
     {

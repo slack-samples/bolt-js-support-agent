@@ -1,10 +1,31 @@
+/**
+ * @typedef {Object} StoreEntry
+ * @property {import('@openai/agents').AgentInputItem[]} messages
+ * @property {number} timestamp
+ */
+
+/**
+ * In-memory conversation history store with TTL-based cleanup.
+ */
 export class ConversationStore {
+  /**
+   * @param {number} [ttlSeconds=86400]
+   * @param {number} [maxConversations=1000]
+   */
   constructor(ttlSeconds = 86400, maxConversations = 1000) {
+    /** @type {Map<string, StoreEntry>} */
     this._store = new Map();
+    /** @private @type {number} */
     this._ttlSeconds = ttlSeconds;
+    /** @private @type {number} */
     this._maxConversations = maxConversations;
   }
 
+  /**
+   * @param {string} channelId
+   * @param {string} threadTs
+   * @returns {import('@openai/agents').AgentInputItem[] | null}
+   */
   getHistory(channelId, threadTs) {
     const key = `${channelId}:${threadTs}`;
     const entry = this._store.get(key);
@@ -16,6 +37,12 @@ export class ConversationStore {
     return entry.messages;
   }
 
+  /**
+   * @param {string} channelId
+   * @param {string} threadTs
+   * @param {import('@openai/agents').AgentInputItem[]} messages
+   * @returns {void}
+   */
   setHistory(channelId, threadTs, messages) {
     const key = `${channelId}:${threadTs}`;
     this._store.set(key, {
@@ -25,6 +52,10 @@ export class ConversationStore {
     this._cleanup();
   }
 
+  /**
+   * @private
+   * @returns {void}
+   */
   _cleanup() {
     const now = Date.now();
     for (const [key, entry] of this._store) {

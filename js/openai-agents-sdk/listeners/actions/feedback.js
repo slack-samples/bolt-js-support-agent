@@ -1,3 +1,8 @@
+/**
+ * Handle feedback button interactions.
+ * @param {import('@slack/bolt').AllMiddlewareArgs & import('@slack/bolt').SlackActionMiddlewareArgs<import('@slack/bolt').BlockFeedbackButtonsAction>} args
+ * @returns {Promise<void>}
+ */
 export async function handleFeedback({ ack, body, client, context, logger }) {
   await ack();
 

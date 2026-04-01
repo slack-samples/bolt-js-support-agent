@@ -1,6 +1,7 @@
 import { tool } from '@openai/agents';
 import { z } from 'zod';
 
+/** User permissions lookup tool for the Casey agent. */
 export const lookupUserPermissions = tool({
   name: 'lookup_user_permissions',
   description:
