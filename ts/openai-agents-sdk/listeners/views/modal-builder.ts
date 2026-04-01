@@ -1,6 +1,7 @@
+import type { ModalView } from '@slack/types';
 import { CATEGORIES } from './app-home-builder.js';
 
-export function buildIssueModal(category: string): any {
+export function buildIssueModal(category: string | undefined): ModalView {
   const categoryOptions = CATEGORIES.map((cat) => ({
     text: { type: 'plain_text' as const, text: cat.value, emoji: true },
     value: cat.value,

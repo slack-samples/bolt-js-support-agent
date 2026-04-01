@@ -18,12 +18,12 @@ export async function handleIssueSubmission({
     const teamId = context.teamId as string;
     const userId = context.userId as string;
     const values = body.view.state.values;
-    const category = (values as any).category_block.category_select.selected_option.value;
-    const description = (values as any).description_block.description_input.value;
+    const category = values.category_block.category_select.selected_option?.value;
+    const description = values.description_block.description_input.value;
 
     // Open a DM with the user
     const dm = await client.conversations.open({ users: userId });
-    const channelId = (dm.channel as any).id;
+    const channelId = dm.channel?.id as string;
 
     // Post the initial message with category and description
     const userMessage = `*Category:* ${category}\n*Description:* ${description}`;

@@ -11,9 +11,7 @@ export async function handleAssistantThreadStarted({
   event,
   logger,
 }: AllMiddlewareArgs & SlackEventMiddlewareArgs<'assistant_thread_started'>): Promise<void> {
-  const assistantThread = (event as any).assistant_thread || {};
-  const channelId = assistantThread.channel_id;
-  const threadTs = assistantThread.thread_ts;
+  const { channel_id: channelId, thread_ts: threadTs } = event.assistant_thread;
 
   try {
     await client.assistant.threads.setSuggestedPrompts({

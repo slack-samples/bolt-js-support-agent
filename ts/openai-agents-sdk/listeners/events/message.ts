@@ -1,21 +1,16 @@
 import type { AgentInputItem } from '@openai/agents';
 import { run } from '@openai/agents';
 import type { AllMiddlewareArgs, SlackEventMiddlewareArgs } from '@slack/bolt';
+import type { GenericMessageEvent, MessageEvent } from '@slack/types';
 
 import { CaseyDeps, caseyAgent } from '../../agent/index.js';
 import { conversationStore } from '../../conversation/index.js';
+import { CONTEXTUAL_EMOJIS, RESOLUTION_PHRASES } from '../constants.js';
 import { createFeedbackBlock } from '../views/feedback-block.js';
 
-const RESOLUTION_PHRASES = [
-  'resolved',
-  'that should fix',
-  "you're all set",
-  'should be working now',
-  'has been reset',
-  'ticket created',
-];
-
-const CONTEXTUAL_EMOJIS = ['+1', 'raised_hands', 'rocket', 'tada', 'bulb', 'fire'];
+function isGenericMessageEvent(event: MessageEvent): event is GenericMessageEvent {
+  return !('subtype' in event && event.subtype !== undefined);
+}
 
 export async function handleMessage({
   client,
@@ -24,17 +19,20 @@ export async function handleMessage({
   logger,
   say,
 }: AllMiddlewareArgs & SlackEventMiddlewareArgs<'message'>): Promise<void> {
-  // Skip bot messages and message subtypes (edits, deletes, etc.)
-  if ((event as any).bot_id || (event as any).subtype) return;
+  // Skip message subtypes (edits, deletes, etc.)
+  if (!isGenericMessageEvent(event)) return;
+
+  // Skip bot messages
+  if (event.bot_id) return;
 
   // Only handle IM channel type
-  if ((event as any).channel_type !== 'im') return;
+  if (event.channel_type !== 'im') return;
 
   try {
     const channelId = event.channel;
     const teamId = context.teamId as string;
-    const text = (event as any).text || '';
-    const threadTs = (event as any).thread_ts || event.ts;
+    const text = event.text || '';
+    const threadTs = event.thread_ts || event.ts;
     const userId = context.userId as string;
 
     // Get conversation history
@@ -107,7 +105,7 @@ export async function handleMessage({
     logger.error(`Failed to handle DM: ${e}`);
     await say({
       text: `:warning: Something went wrong! (${e})`,
-      thread_ts: (event as any).thread_ts || event.ts,
+      thread_ts: event.thread_ts || event.ts,
     });
   }
 }

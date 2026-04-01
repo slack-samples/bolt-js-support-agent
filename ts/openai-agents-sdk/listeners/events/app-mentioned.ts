@@ -4,18 +4,8 @@ import type { AllMiddlewareArgs, SlackEventMiddlewareArgs } from '@slack/bolt';
 
 import { CaseyDeps, caseyAgent } from '../../agent/index.js';
 import { conversationStore } from '../../conversation/index.js';
+import { CONTEXTUAL_EMOJIS, RESOLUTION_PHRASES } from '../constants.js';
 import { createFeedbackBlock } from '../views/feedback-block.js';
-
-const RESOLUTION_PHRASES = [
-  'resolved',
-  'that should fix',
-  "you're all set",
-  'should be working now',
-  'has been reset',
-  'ticket created',
-];
-
-const CONTEXTUAL_EMOJIS = ['+1', 'raised_hands', 'rocket', 'tada', 'bulb', 'fire'];
 
 export async function handleAppMentioned({
   client,
@@ -25,7 +15,7 @@ export async function handleAppMentioned({
   say,
 }: AllMiddlewareArgs & SlackEventMiddlewareArgs<'app_mention'>): Promise<void> {
   try {
-    const channelId = event.channel as string;
+    const channelId = event.channel;
     const teamId = context.teamId as string;
     const text = event.text || '';
     const threadTs = event.thread_ts || event.ts;

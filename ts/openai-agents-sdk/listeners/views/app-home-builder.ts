@@ -1,3 +1,5 @@
+import type { HomeView } from '@slack/types';
+
 interface Category {
   actionId: string;
   text: string;
@@ -32,7 +34,7 @@ export const CATEGORIES: Category[] = [
   },
 ];
 
-export function buildAppHomeView(): any {
+export function buildAppHomeView(): HomeView {
   const blocks = [
     {
       type: 'header',

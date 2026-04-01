@@ -1,4 +1,7 @@
-export function createFeedbackBlock(): Record<string, unknown>[] {
+import type { KnownBlock } from '@slack/types';
+
+export function createFeedbackBlock(): KnownBlock[] {
+  // context_actions is not yet part of Bolt's KnownBlock union
   return [
     {
       type: 'context_actions',
@@ -19,5 +22,5 @@ export function createFeedbackBlock(): Record<string, unknown>[] {
         },
       ],
     },
-  ];
+  ] as KnownBlock[];
 }

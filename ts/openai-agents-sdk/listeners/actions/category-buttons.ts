@@ -1,4 +1,4 @@
-import type { AllMiddlewareArgs, SlackActionMiddlewareArgs } from '@slack/bolt';
+import type { AllMiddlewareArgs, BlockButtonAction, SlackActionMiddlewareArgs } from '@slack/bolt';
 
 import { buildIssueModal } from '../views/modal-builder.js';
 
@@ -7,12 +7,12 @@ export async function handleCategoryButton({
   body,
   client,
   logger,
-}: AllMiddlewareArgs & SlackActionMiddlewareArgs): Promise<void> {
+}: AllMiddlewareArgs & SlackActionMiddlewareArgs<BlockButtonAction>): Promise<void> {
   await ack();
 
   try {
-    const category = (body as any).actions[0].value;
-    const triggerId = (body as any).trigger_id;
+    const category = body.actions[0].value;
+    const triggerId = body.trigger_id;
     const modal = buildIssueModal(category);
     await client.views.open({ trigger_id: triggerId, view: modal });
   } catch (e) {
