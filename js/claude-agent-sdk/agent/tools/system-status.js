@@ -1,6 +1,14 @@
 import { tool } from '@anthropic-ai/claude-agent-sdk';
 import { z } from 'zod';
 
+/**
+ * @typedef {Object} SystemInfo
+ * @property {string} name
+ * @property {string} status
+ * @property {string} details
+ */
+
+/** @type {Record<string, SystemInfo>} */
 const SYSTEM_STATUSES = {
   email: {
     name: 'Email (Exchange Online)',
@@ -50,6 +58,7 @@ const SYSTEM_STATUSES = {
   },
 };
 
+/** @type {Record<string, string>} */
 const STATUS_EMOJI = {
   operational: ':large_green_circle:',
   degraded: ':large_yellow_circle:',

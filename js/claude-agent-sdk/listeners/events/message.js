@@ -2,6 +2,15 @@ import { runCaseyAgent } from '../../agent/index.js';
 import { sessionStore } from '../../conversation/index.js';
 import { createFeedbackBlock } from '../views/feedback-block.js';
 
+/**
+ * @param {import('@slack/types').MessageEvent} event
+ * @returns {event is import('@slack/types').GenericMessageEvent}
+ */
+function isGenericMessageEvent(event) {
+  return !('subtype' in event && event.subtype !== undefined);
+}
+
+/** @type {string[]} */
 const RESOLUTION_PHRASES = [
   'resolved',
   'that should fix',
@@ -11,11 +20,20 @@ const RESOLUTION_PHRASES = [
   'ticket created',
 ];
 
+/** @type {string[]} */
 const CONTEXTUAL_EMOJIS = ['+1', 'raised_hands', 'rocket', 'tada', 'bulb', 'fire'];
 
+/**
+ * Handle incoming DM messages and run the Casey agent.
+ * @param {import('@slack/bolt').AllMiddlewareArgs & import('@slack/bolt').SlackEventMiddlewareArgs<'message'>} args
+ * @returns {Promise<void>}
+ */
 export async function handleMessage({ client, context, event, logger, say }) {
-  // Skip bot messages and message subtypes (edits, deletes, etc.)
-  if (event.bot_id || event.subtype) return;
+  // Skip message subtypes (edits, deletes, etc.)
+  if (!isGenericMessageEvent(event)) return;
+
+  // Skip bot messages
+  if (event.bot_id) return;
 
   // Only handle IM channel type
   if (event.channel_type !== 'im') return;

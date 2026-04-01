@@ -1,6 +1,7 @@
 import { tool } from '@anthropic-ai/claude-agent-sdk';
 import { z } from 'zod';
 
+/** User permissions lookup tool for the Casey agent. */
 export const lookupUserPermissionsTool = tool(
   'lookup_user_permissions',
   "Look up a user's access permissions and group memberships for a given system. " +

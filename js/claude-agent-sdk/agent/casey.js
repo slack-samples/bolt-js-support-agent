@@ -59,6 +59,7 @@ BAD: "OMG this is so frustrating!!!" (too emotional)
 - Do not promise specific resolution times unless the tool response includes them
 - If unsure about a user's issue, ask clarifying questions before taking action`;
 
+/** @type {string[]} */
 const ALLOWED_TOOLS = [
   'search_knowledge_base',
   'create_support_ticket',
@@ -67,6 +68,12 @@ const ALLOWED_TOOLS = [
   'lookup_user_permissions',
 ];
 
+/**
+ * Run the Casey agent with the given text and optional session ID.
+ * @param {string} text - The user's message text.
+ * @param {string} [sessionId] - An existing session ID to resume conversation.
+ * @returns {Promise<{responseText: string, sessionId: string | null}>}
+ */
 export async function runCaseyAgent(text, sessionId = undefined) {
   const caseyToolsServer = createSdkMcpServer({
     name: 'casey-tools',
@@ -80,6 +87,7 @@ export async function runCaseyAgent(text, sessionId = undefined) {
     ],
   });
 
+  /** @type {import('@anthropic-ai/claude-agent-sdk').Options} */
   const options = {
     systemPrompt: CASEY_SYSTEM_PROMPT,
     mcpServers: { 'casey-tools': caseyToolsServer },

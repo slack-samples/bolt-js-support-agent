@@ -1,6 +1,7 @@
 import { tool } from '@anthropic-ai/claude-agent-sdk';
 import { z } from 'zod';
 
+/** Password reset tool for the Casey agent. */
 export const triggerPasswordResetTool = tool(
   'trigger_password_reset',
   'Trigger a password reset for a specified user account. ' +

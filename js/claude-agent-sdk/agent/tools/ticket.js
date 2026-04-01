@@ -1,6 +1,7 @@
 import { tool } from '@anthropic-ai/claude-agent-sdk';
 import { z } from 'zod';
 
+/** Support ticket creation tool for the Casey agent. */
 export const createSupportTicketTool = tool(
   'create_support_ticket',
   'Create a new IT support ticket for issues that require human follow-up. ' +

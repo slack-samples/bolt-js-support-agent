@@ -1,10 +1,31 @@
+/**
+ * @typedef {Object} StoreEntry
+ * @property {string} sessionId
+ * @property {number} timestamp
+ */
+
+/**
+ * In-memory session ID store with TTL-based cleanup.
+ */
 export class SessionStore {
+  /**
+   * @param {number} [ttlSeconds=86400]
+   * @param {number} [maxEntries=1000]
+   */
   constructor(ttlSeconds = 86400, maxEntries = 1000) {
+    /** @type {Map<string, StoreEntry>} */
     this._store = new Map();
+    /** @private @type {number} */
     this._ttlSeconds = ttlSeconds;
+    /** @private @type {number} */
     this._maxEntries = maxEntries;
   }
 
+  /**
+   * @param {string} channelId
+   * @param {string} threadTs
+   * @returns {string | null}
+   */
   getSession(channelId, threadTs) {
     const key = `${channelId}:${threadTs}`;
     const entry = this._store.get(key);
@@ -16,6 +37,12 @@ export class SessionStore {
     return entry.sessionId;
   }
 
+  /**
+   * @param {string} channelId
+   * @param {string} threadTs
+   * @param {string} sessionId
+   * @returns {void}
+   */
   setSession(channelId, threadTs, sessionId) {
     const key = `${channelId}:${threadTs}`;
     this._store.set(key, {
@@ -25,6 +52,10 @@ export class SessionStore {
     this._cleanup();
   }
 
+  /**
+   * @private
+   * @returns {void}
+   */
   _cleanup() {
     const now = Date.now();
     for (const [key, entry] of this._store) {

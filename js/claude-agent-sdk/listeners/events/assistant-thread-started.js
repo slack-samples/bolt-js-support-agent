@@ -4,10 +4,13 @@ const SUGGESTED_PROMPTS = [
   { title: 'Network Issues', message: "I'm having network connectivity issues" },
 ];
 
+/**
+ * Handle assistant_thread_started events by setting suggested prompts.
+ * @param {import('@slack/bolt').AllMiddlewareArgs & import('@slack/bolt').SlackEventMiddlewareArgs<'assistant_thread_started'>} args
+ * @returns {Promise<void>}
+ */
 export async function handleAssistantThreadStarted({ client, event, logger }) {
-  const assistantThread = event.assistant_thread || {};
-  const channelId = assistantThread.channel_id;
-  const threadTs = assistantThread.thread_ts;
+  const { channel_id: channelId, thread_ts: threadTs } = event.assistant_thread;
 
   try {
     await client.assistant.threads.setSuggestedPrompts({
