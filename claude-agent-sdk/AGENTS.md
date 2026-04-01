@@ -1,15 +1,15 @@
-# AGENTS.md - js/claude-agent-sdk
+# AGENTS.md - claude-agent-sdk
 
 JavaScript implementation of Casey using the [Claude Agent SDK](https://platform.claude.com/docs/en/agent-sdk) (`@anthropic-ai/claude-agent-sdk`).
 
-See the [root AGENTS.md](../../AGENTS.md) for monorepo-wide architecture and shared patterns.
+See the [root AGENTS.md](../AGENTS.md) for monorepo-wide architecture and shared patterns.
 
 ## Setup
 
 ```sh
 cp .env.sample .env   # Fill in SLACK_BOT_TOKEN, SLACK_APP_TOKEN, ANTHROPIC_API_KEY
 npm install
-npm start             # or: npm run dev (with file watching)
+npm start
 ```
 
 ## Environment Variables
@@ -25,9 +25,41 @@ npm start             # or: npm run dev (with file watching)
 ```sh
 npm install          # Install dependencies
 npm start            # Start the app
-npm run dev          # Start with file watching
 npm run lint         # Biome lint and format check
 npm run lint:fix     # Auto-fix lint and format issues
+npm run check        # Type check JavaScript with tsc (checkJs)
+```
+
+## Folder Structure
+
+```
+app.js                            # Entry point — Bolt app setup and start
+manifest.json                     # Slack app manifest (Socket Mode)
+agent/
+  casey.js                        # Agent definition (Claude Agent SDK)
+  index.js                        # Agent exports
+  tools/                          # Hardcoded IT helpdesk tools
+    knowledge-base.js             # 8 KB articles, keyword search
+    password-reset.js             # Simulated password reset
+    system-status.js              # 9 systems with hardcoded statuses
+    ticket.js                     # Random ticket ID generator
+    user-permissions.js           # Simulated permission check/grant
+conversation/
+  store.js                        # SessionStore — stores session IDs only
+listeners/
+  events/
+    message.js                    # DM handler — runs agent, streams response
+    app-mentioned.js              # Channel @Casey mention handler
+    app-home-opened.js            # Publishes App Home view
+    assistant-thread-started.js   # Sets suggested prompts
+  actions/
+    category-buttons.js           # Opens issue submission modal
+    feedback.js                   # Handles thumbs up/down reactions
+  views/
+    issue-modal.js                # Modal submission handler
+    app-home-builder.js           # App Home Block Kit view
+    modal-builder.js              # Issue modal Block Kit view
+    feedback-block.js             # Feedback buttons (raw Block Kit JSON)
 ```
 
 ## Architecture
