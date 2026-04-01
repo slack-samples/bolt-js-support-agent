@@ -59,18 +59,6 @@ BAD: "OMG this is so frustrating!!!" (too emotional)
 - Do not promise specific resolution times unless the tool response includes them
 - If unsure about a user's issue, ask clarifying questions before taking action`;
 
-const caseyToolsServer = createSdkMcpServer({
-  name: 'casey-tools',
-  version: '1.0.0',
-  tools: [
-    searchKnowledgeBaseTool,
-    createSupportTicketTool,
-    triggerPasswordResetTool,
-    checkSystemStatusTool,
-    lookupUserPermissionsTool,
-  ],
-});
-
 const ALLOWED_TOOLS = [
   'search_knowledge_base',
   'create_support_ticket',
@@ -83,6 +71,18 @@ export async function runCaseyAgent(
   text: string,
   sessionId: string | undefined = undefined,
 ): Promise<{ responseText: string; sessionId: string | null }> {
+  const caseyToolsServer = createSdkMcpServer({
+    name: 'casey-tools',
+    version: '1.0.0',
+    tools: [
+      searchKnowledgeBaseTool,
+      createSupportTicketTool,
+      triggerPasswordResetTool,
+      checkSystemStatusTool,
+      lookupUserPermissionsTool,
+    ],
+  });
+
   const options = {
     systemPrompt: CASEY_SYSTEM_PROMPT,
     mcpServers: { 'casey-tools': caseyToolsServer },
