@@ -44,22 +44,22 @@ agent/
     system-status.js              # 9 systems with hardcoded statuses
     ticket.js                     # Random ticket ID generator
     user-permissions.js           # Simulated permission check/grant
-conversation/
+thread-context/
   store.js                        # SessionStore — stores session IDs only
 listeners/
   events/
-    message.js                    # DM handler — runs agent, streams response
+    message.js                    # DM and channel thread handler — runs agent, streams response
     app-mentioned.js              # Channel @Casey mention handler
     app-home-opened.js            # Publishes App Home view
     assistant-thread-started.js   # Sets suggested prompts
   actions/
-    category-buttons.js           # Opens issue submission modal
-    feedback.js                   # Handles thumbs up/down reactions
+    issue-buttons.js              # Opens issue submission modal
+    feedback-buttons.js           # Handles thumbs up/down reactions
   views/
-    issue-modal.js                # Modal submission handler
+    issue-modal.js                # Modal submission — posts DM with metadata
     app-home-builder.js           # App Home Block Kit view
-    modal-builder.js              # Issue modal Block Kit view
-    feedback-block.js             # Feedback buttons (raw Block Kit JSON)
+    issue-modal-builder.js        # Issue modal Block Kit view
+    feedback-builder.js           # Feedback buttons (raw Block Kit JSON)
 ```
 
 ## Architecture
@@ -77,9 +77,13 @@ The agent is defined in `agent/casey.js` using the Claude Agent SDK:
 
 ### Conversation Management
 
-`conversation/store.js` exports a `SessionStore` that stores **session IDs only** (not full message history). The Claude Agent SDK manages conversation history server-side. The store passes `{ resume: sessionId }` on subsequent turns to continue a conversation.
+`thread-context/store.js` exports a `SessionStore` that stores **session IDs only** (not full message history). The Claude Agent SDK manages conversation history server-side. The store passes `{ resume: sessionId }` on subsequent turns to continue a conversation.
 
 The store uses a `Map` keyed by `${channelId}:${threadTs}` with TTL-based cleanup (1 hour) and a max entry limit (1000).
+
+### Dependency Injection
+
+`runCaseyAgent(text, sessionId, deps)` accepts an optional `deps` object with `{ client, userId, channelId, threadTs, messageTs }`. Tools that need Slack API access (emoji reactions, mark resolved) are created as closures inside `runCaseyAgent()` that capture the `deps` parameter. Static tools (knowledge base, tickets, etc.) remain as module-level exports in `agent/tools/`.
 
 ### Tool Definitions
 

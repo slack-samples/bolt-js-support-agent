@@ -1,4 +1,5 @@
-import { createSdkMcpServer, query } from '@anthropic-ai/claude-agent-sdk';
+import { createSdkMcpServer, query, tool } from '@anthropic-ai/claude-agent-sdk';
+import { z } from 'zod';
 
 import {
   checkSystemStatusTool,
@@ -53,37 +54,132 @@ BAD: "OMG this is so frustrating!!!" (too emotional)
 - Create a ticket when the user has already tried the KB steps and they didn't work
 - For access requests, verify the system name and create a ticket with the details
 
+## EMOJI REACTIONS
+Always react to every user message with \`add_emoji_reaction\` before responding. \
+Pick any Slack emoji that reflects the *topic* or *tone* of the message — be creative and specific \
+(e.g. \`dog\` for dog topics, \`key\` for password issues, \`sweat_smile\` for frustration). \
+Don't limit yourself to IT emojis; match whatever the user is talking about or feeling. \
+Vary your picks across a thread; don't repeat the same emoji.
+- \`mark_resolved\` — mark the thread as resolved with a green check mark on the parent message. \
+Call this once when the issue is fully resolved (password reset done, ticket created, problem fixed).
+- Do not use \`eyes\` — it is added automatically
+
 ## BOUNDARIES
 - You are an IT helpdesk agent only — politely redirect non-IT questions
 - Do not make up system statuses or ticket numbers — always use the provided tools
 - Do not promise specific resolution times unless the tool response includes them
 - If unsure about a user's issue, ask clarifying questions before taking action`;
 
+const EMOJI_DESCRIPTION =
+  "Add an emoji reaction to the user's current message to acknowledge the topic.\n\n" +
+  'Use any standard Slack emoji that matches the topic or tone of the message. ' +
+  'Be creative and specific — if someone mentions a dog, use `dog`; if they sound frustrated, use `sweat_smile`. The examples below are common picks, not the full set:\n' +
+  '- Gratitude/praise: pray, bow, blush, sparkles, star-struck, heart\n' +
+  '- Frustration/confusion: thinking_face, face_with_monocle, sweat_smile, upside_down_face\n' +
+  '- Login/password: key, lock, closed_lock_with_key\n' +
+  '- Something broken: wrench, hammer_and_wrench, mag\n' +
+  '- Performance/slow: hourglass_flowing_sand, snail\n' +
+  '- Urgency: rotating_light, zap, fire\n' +
+  '- Success/celebration: tada, raised_hands, partying_face, rocket, muscle\n' +
+  '- Setup/config: gear, package\n' +
+  '- Network/connectivity: satellite, signal_strength\n' +
+  '- Agreement/acknowledgment: thumbsup, ok_hand, saluting_face, +1\n\n' +
+  'Do not use eyes (added automatically) or white_check_mark (reserved for mark_resolved).';
+
 /** @type {string[]} */
 const ALLOWED_TOOLS = [
-  'search_knowledge_base',
-  'create_support_ticket',
-  'trigger_password_reset',
+  'add_emoji_reaction',
   'check_system_status',
+  'create_support_ticket',
   'lookup_user_permissions',
+  'mark_resolved',
+  'search_knowledge_base',
+  'trigger_password_reset',
 ];
+
+/**
+ * @typedef {Object} CaseyDeps
+ * @property {import('@slack/web-api').WebClient} client
+ * @property {string} userId
+ * @property {string} channelId
+ * @property {string} threadTs
+ * @property {string} messageTs
+ */
 
 /**
  * Run the Casey agent with the given text and optional session ID.
  * @param {string} text - The user's message text.
  * @param {string} [sessionId] - An existing session ID to resume conversation.
+ * @param {CaseyDeps} [deps] - Dependencies for tools that need Slack API access.
  * @returns {Promise<{responseText: string, sessionId: string | null}>}
  */
-export async function runCaseyAgent(text, sessionId = undefined) {
+export async function runCaseyAgent(text, sessionId = undefined, deps = undefined) {
+  // Closure-based tools that need deps for Slack API access
+  const addEmojiReactionTool = tool(
+    'add_emoji_reaction',
+    EMOJI_DESCRIPTION,
+    { emoji_name: z.string().describe("The Slack emoji name without colons (e.g. 'tada', 'wrench', 'pray').") },
+    async ({ emoji_name }) => {
+      if (!deps) {
+        return { content: [{ type: 'text', text: 'No deps available to add reaction.' }] };
+      }
+
+      // Skip ~15% of reactions to feel more natural
+      if (Math.random() < 0.15) {
+        return {
+          content: [
+            { type: 'text', text: `Skipped :${emoji_name}: reaction (randomly omitted to avoid over-reacting)` },
+          ],
+        };
+      }
+
+      try {
+        await deps.client.reactions.add({
+          channel: deps.channelId,
+          timestamp: deps.messageTs,
+          name: emoji_name,
+        });
+        return { content: [{ type: 'text', text: `Reacted with :${emoji_name}:` }] };
+      } catch (e) {
+        return { content: [{ type: 'text', text: `Could not add reaction: ${e.data?.error || e.message}` }] };
+      }
+    },
+  );
+
+  const markResolvedTool = tool(
+    'mark_resolved',
+    "Mark the user's issue as resolved by adding a green check mark reaction to the parent thread message. " +
+      'Call this once when the issue is fully resolved — e.g. password reset complete, ticket created, problem fixed.',
+    {},
+    async () => {
+      if (!deps) {
+        return { content: [{ type: 'text', text: 'No deps available to mark resolved.' }] };
+      }
+
+      try {
+        await deps.client.reactions.add({
+          channel: deps.channelId,
+          timestamp: deps.threadTs,
+          name: 'white_check_mark',
+        });
+        return { content: [{ type: 'text', text: 'Thread marked as resolved.' }] };
+      } catch (e) {
+        return { content: [{ type: 'text', text: `Could not mark resolved: ${e.data?.error || e.message}` }] };
+      }
+    },
+  );
+
   const caseyToolsServer = createSdkMcpServer({
     name: 'casey-tools',
     version: '1.0.0',
     tools: [
-      searchKnowledgeBaseTool,
-      createSupportTicketTool,
-      triggerPasswordResetTool,
+      addEmojiReactionTool,
       checkSystemStatusTool,
+      createSupportTicketTool,
       lookupUserPermissionsTool,
+      markResolvedTool,
+      searchKnowledgeBaseTool,
+      triggerPasswordResetTool,
     ],
   });
 

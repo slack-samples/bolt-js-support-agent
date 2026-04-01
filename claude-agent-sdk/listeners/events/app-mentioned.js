@@ -1,19 +1,6 @@
 import { runCaseyAgent } from '../../agent/index.js';
-import { sessionStore } from '../../conversation/index.js';
-import { createFeedbackBlock } from '../views/feedback-block.js';
-
-/** @type {string[]} */
-const RESOLUTION_PHRASES = [
-  'resolved',
-  'that should fix',
-  "you're all set",
-  'should be working now',
-  'has been reset',
-  'ticket created',
-];
-
-/** @type {string[]} */
-const CONTEXTUAL_EMOJIS = ['+1', 'raised_hands', 'rocket', 'tada', 'bulb', 'fire'];
+import { sessionStore } from '../../thread-context/index.js';
+import { buildFeedbackBlocks } from '../views/feedback-builder.js';
 
 /**
  * Handle app_mention events and run the Casey agent.
@@ -40,11 +27,13 @@ export async function handleAppMentioned({ client, context, event, logger, say }
     }
 
     // Add eyes reaction only to the first message (not threaded replies)
-    await client.reactions.add({
-      channel: channelId,
-      timestamp: event.ts,
-      name: 'eyes',
-    });
+    if (!event.thread_ts) {
+      await client.reactions.add({
+        channel: channelId,
+        timestamp: event.ts,
+        name: 'eyes',
+      });
+    }
 
     // Set assistant thread status with loading messages
     await client.assistant.threads.setStatus({
@@ -63,8 +52,9 @@ export async function handleAppMentioned({ client, context, event, logger, say }
     // Get conversation session
     const existingSessionId = sessionStore.getSession(channelId, threadTs);
 
-    // Run the agent
-    const { responseText, sessionId: newSessionId } = await runCaseyAgent(cleanedText, existingSessionId);
+    // Run the agent with deps for tool access
+    const deps = { client, userId, channelId, threadTs, messageTs: event.ts };
+    const { responseText, sessionId: newSessionId } = await runCaseyAgent(cleanedText, existingSessionId, deps);
 
     // Stream response in thread with feedback buttons
     const streamer = client.chatStream({
@@ -74,32 +64,12 @@ export async function handleAppMentioned({ client, context, event, logger, say }
       thread_ts: threadTs,
     });
     await streamer.append({ markdown_text: responseText });
-    const feedbackBlocks = createFeedbackBlock();
+    const feedbackBlocks = buildFeedbackBlocks();
     await streamer.stop({ blocks: feedbackBlocks });
 
     // Store conversation session
     if (newSessionId) {
       sessionStore.setSession(channelId, threadTs, newSessionId);
-    }
-
-    // ~20% chance contextual emoji (lower than DM to be less noisy)
-    if (Math.random() < 0.2) {
-      const emoji = CONTEXTUAL_EMOJIS[Math.floor(Math.random() * CONTEXTUAL_EMOJIS.length)];
-      await client.reactions.add({
-        channel: channelId,
-        timestamp: event.ts,
-        name: emoji,
-      });
-    }
-
-    // Check for resolution phrases
-    const outputLower = responseText.toLowerCase();
-    if (RESOLUTION_PHRASES.some((phrase) => outputLower.includes(phrase))) {
-      await client.reactions.add({
-        channel: channelId,
-        timestamp: event.ts,
-        name: 'white_check_mark',
-      });
     }
   } catch (e) {
     logger.error(`Failed to handle app mention: ${e}`);

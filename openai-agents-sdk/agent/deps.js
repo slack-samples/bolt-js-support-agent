@@ -7,8 +7,9 @@ export class CaseyDeps {
    * @param {string} userId
    * @param {string} channelId
    * @param {string} threadTs
+   * @param {string} messageTs
    */
-  constructor(client, userId, channelId, threadTs) {
+  constructor(client, userId, channelId, threadTs, messageTs) {
     /** @type {import('@slack/web-api').WebClient} */
     this.client = client;
     /** @type {string} */
@@ -17,5 +18,7 @@ export class CaseyDeps {
     this.channelId = channelId;
     /** @type {string} */
     this.threadTs = threadTs;
+    /** @type {string} */
+    this.messageTs = messageTs;
   }
 }

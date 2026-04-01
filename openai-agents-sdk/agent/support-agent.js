@@ -1,9 +1,11 @@
 import { Agent } from '@openai/agents';
 
 import {
+  addEmojiReaction,
   checkSystemStatus,
   createSupportTicket,
   lookupUserPermissions,
+  markResolved,
   searchKnowledgeBase,
   triggerPasswordReset,
 } from './tools/index.js';
@@ -53,6 +55,16 @@ BAD: "OMG this is so frustrating!!!" (too emotional)
 - Create a ticket when the user has already tried the KB steps and they didn't work
 - For access requests, verify the system name and create a ticket with the details
 
+## EMOJI REACTIONS
+Always react to every user message with \`add_emoji_reaction\` before responding. \
+Pick any Slack emoji that reflects the *topic* or *tone* of the message — be creative and specific \
+(e.g. \`dog\` for dog topics, \`key\` for password issues, \`sweat_smile\` for frustration). \
+Don't limit yourself to IT emojis; match whatever the user is talking about or feeling. \
+Vary your picks across a thread; don't repeat the same emoji.
+- \`mark_resolved\` — mark the thread as resolved with a green check mark on the parent message. \
+Call this once when the issue is fully resolved (password reset done, ticket created, problem fixed).
+- Do not use \`eyes\` — it is added automatically
+
 ## BOUNDARIES
 - You are an IT helpdesk agent only — politely redirect non-IT questions
 - Do not make up system statuses or ticket numbers — always use the provided tools
@@ -62,6 +74,14 @@ BAD: "OMG this is so frustrating!!!" (too emotional)
 export const caseyAgent = new Agent({
   name: 'Casey',
   instructions: CASEY_SYSTEM_PROMPT,
-  tools: [searchKnowledgeBase, createSupportTicket, triggerPasswordReset, checkSystemStatus, lookupUserPermissions],
+  tools: [
+    addEmojiReaction,
+    checkSystemStatus,
+    createSupportTicket,
+    lookupUserPermissions,
+    markResolved,
+    searchKnowledgeBase,
+    triggerPasswordReset,
+  ],
   model: 'gpt-4.1-mini',
 });

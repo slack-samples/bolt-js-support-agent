@@ -34,9 +34,11 @@ All implementations use [Biome](https://biomejs.dev/) for linting and formatting
 - **Bolt for JavaScript** (`@slack/bolt`) with Socket Mode for all Slack communication
 - **Listener registration** — `listeners/index.js` calls sub-registrars for events, actions, and views
 - **Streaming responses** — DM and mention handlers use `client.chatStream()` to show typing indicators
-- **Emoji reactions** — `:eyes:` on first message, contextual emoji based on response content, `:white_check_mark:` on completion
+- **Emoji reactions** — `:eyes:` on first message, agent-driven contextual emoji via `add_emoji_reaction` tool, `:white_check_mark:` on resolution via `mark_resolved` tool
 - **Feedback buttons** — Every agent response includes thumbs up/down buttons via `context_actions` blocks
 - **App Home** — 5 category buttons (Hardware, Software, Access, Network, Other) that open an issue submission modal
+- **Channel thread replies** — Bot responds to follow-up messages in channel threads where it is already engaged (no re-mention needed)
+- **Issue modal delegation** — App Home modal submissions post a DM with metadata; the message handler runs the agent
 - **No database** — Conversation state stored in-memory `Map` objects with TTL-based cleanup
 
 ### Claude Agent SDK vs OpenAI Agents SDK
@@ -48,8 +50,9 @@ All implementations use [Biome](https://biomejs.dev/) for linting and formatting
 | Tools | MCP tools via `createSdkMcpServer()` | Function tools via `tool()` |
 | Tool return format | `{ content: [{ type: 'text', text }] }` | Plain string |
 | Conversation | Server-side sessions (store session ID only) | Client-side history (store full message array) |
+| Store directory | `thread-context/` | `thread-context/` |
 | Store class | `SessionStore` | `ConversationStore` |
-| Dependencies | System prompt baked in | `CaseyDeps` class for dependency injection |
+| Dependencies | Closure-based deps in `runCaseyAgent()` | `CaseyDeps` class for dependency injection |
 | Model | `claude-sonnet-4-20250514` | `gpt-4.1-mini` |
 
 ## CI/CD

@@ -21,7 +21,9 @@
     "scopes": {
       "bot": [
         "app_mentions:read",
+        "channels:history",
         "chat:write",
+        "groups:history",
         "im:history",
         "im:read",
         "im:write",
@@ -34,7 +36,14 @@
   },
   "settings": {
     "event_subscriptions": {
-      "bot_events": ["app_home_opened", "app_mention", "assistant_thread_started", "message.im"]
+      "bot_events": [
+        "app_home_opened",
+        "app_mention",
+        "assistant_thread_started",
+        "message.channels",
+        "message.groups",
+        "message.im"
+      ]
     },
     "interactivity": {
       "is_enabled": true

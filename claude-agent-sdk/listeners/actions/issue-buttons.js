@@ -1,11 +1,11 @@
-import { buildIssueModal } from '../views/modal-builder.js';
+import { buildIssueModal } from '../views/issue-modal-builder.js';
 
 /**
  * Handle category button clicks from the App Home.
  * @param {import('@slack/bolt').AllMiddlewareArgs & import('@slack/bolt').SlackActionMiddlewareArgs<import('@slack/bolt').BlockButtonAction>} args
  * @returns {Promise<void>}
  */
-export async function handleCategoryButton({ ack, body, client, logger }) {
+export async function handleIssueButton({ ack, body, client, logger }) {
   await ack();
 
   try {

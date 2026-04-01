@@ -1,5 +1,5 @@
-import { handleCategoryButton } from './category-buttons.js';
-import { handleFeedback } from './feedback.js';
+import { handleFeedbackButton } from './feedback-buttons.js';
+import { handleIssueButton } from './issue-buttons.js';
 
 /**
  * Register action listeners with the Bolt app.
@@ -7,6 +7,6 @@ import { handleFeedback } from './feedback.js';
  * @returns {void}
  */
 export function register(app) {
-  app.action(/^category_/, handleCategoryButton);
-  app.action('feedback', handleFeedback);
+  app.action(/^category_/, handleIssueButton);
+  app.action('feedback', handleFeedbackButton);
 }

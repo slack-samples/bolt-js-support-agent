@@ -40,27 +40,29 @@ agent/
   deps.js                        # CaseyDeps — dependency injection
   index.js                        # Agent exports
   tools/                          # Hardcoded IT helpdesk tools
+    add-emoji-reaction.js         # Agent-driven contextual emoji reactions
     knowledge-base.js             # 8 KB articles, keyword search
+    mark-resolved.js              # Adds :white_check_mark: to thread parent
     password-reset.js             # Simulated password reset
     system-status.js              # 9 systems with hardcoded statuses
     ticket.js                     # Random ticket ID generator
     user-permissions.js           # Simulated permission check/grant
-conversation/
+thread-context/
   store.js                        # ConversationStore — stores full message history
 listeners/
   events/
-    message.js                    # DM handler — runs agent, streams response
+    message.js                    # DM and channel thread handler — runs agent, streams response
     app-mentioned.js              # Channel @Casey mention handler
     app-home-opened.js            # Publishes App Home view
     assistant-thread-started.js   # Sets suggested prompts
   actions/
-    category-buttons.js           # Opens issue submission modal
-    feedback.js                   # Handles thumbs up/down reactions
+    issue-buttons.js              # Opens issue submission modal
+    feedback-buttons.js           # Handles thumbs up/down reactions
   views/
-    issue-modal.js                # Modal submission handler
+    issue-modal.js                # Modal submission — posts DM with metadata
     app-home-builder.js           # App Home Block Kit view
-    modal-builder.js              # Issue modal Block Kit view
-    feedback-block.js             # Feedback buttons (raw Block Kit JSON)
+    issue-modal-builder.js        # Issue modal Block Kit view
+    feedback-builder.js           # Feedback buttons (raw Block Kit JSON)
 ```
 
 ## Architecture
@@ -77,13 +79,13 @@ The agent is defined in `agent/support-agent.js` using the OpenAI Agents SDK:
 
 ### Conversation Management
 
-`conversation/store.js` exports a `ConversationStore` that stores **full message history** arrays in a `Map` keyed by `${channelId}:${threadTs}`. The store has TTL-based cleanup (1 hour) and a max entry limit (1000).
+`thread-context/store.js` exports a `ConversationStore` that stores **full message history** arrays in a `Map` keyed by `${channelId}:${threadTs}`. The store has TTL-based cleanup (1 hour) and a max entry limit (1000).
 
 After each agent run, `result.history` provides the updated history to store for the next turn.
 
 ### Dependency Injection
 
-`agent/deps.js` defines a `CaseyDeps` class that holds `client`, `userId`, `channelId`, and `threadTs`. This is passed as the `context` parameter to `run()` and is available in tool `execute` functions via `context.deps`.
+`agent/deps.js` defines a `CaseyDeps` class that holds `client`, `userId`, `channelId`, `threadTs`, and `messageTs`. This is passed as the `context` parameter to `run()` and is available in tool `execute` functions via `context.deps`.
 
 ### Tool Definitions
 

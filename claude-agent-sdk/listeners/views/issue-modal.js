@@ -1,9 +1,8 @@
-import { runCaseyAgent } from '../../agent/index.js';
-import { sessionStore } from '../../conversation/index.js';
-import { createFeedbackBlock } from './feedback-block.js';
-
 /**
  * Handle issue submission from the modal.
+ *
+ * Posts the issue as a DM with metadata so the message event handler
+ * picks it up and runs the agent from there.
  * @param {import('@slack/bolt').AllMiddlewareArgs & import('@slack/bolt').SlackViewMiddlewareArgs} args
  * @returns {Promise<void>}
  */
@@ -11,7 +10,6 @@ export async function handleIssueSubmission({ ack, body, client, context, logger
   await ack();
 
   try {
-    const teamId = context.teamId;
     const userId = context.userId;
     const values = body.view.state.values;
     const category = values.category_block.category_select.selected_option.value;
@@ -21,53 +19,17 @@ export async function handleIssueSubmission({ ack, body, client, context, logger
     const dm = await client.conversations.open({ users: userId });
     const channelId = dm.channel.id;
 
-    // Post the initial message with category and description
+    // Post the issue message with metadata so the message handler can
+    // identify it and run the agent on behalf of the original user
     const userMessage = `*Category:* ${category}\n*Description:* ${description}`;
-    const initial = await client.chat.postMessage({
+    await client.chat.postMessage({
       channel: channelId,
       text: userMessage,
+      metadata: {
+        event_type: 'issue_submission',
+        event_payload: { user_id: userId },
+      },
     });
-    const threadTs = initial.ts;
-
-    // Set assistant thread status with loading messages
-    await client.assistant.threads.setStatus({
-      channel_id: channelId,
-      thread_ts: threadTs,
-      status: 'Thinking…',
-      loading_messages: [
-        'Teaching the hamsters to type faster…',
-        'Untangling the internet cables…',
-        'Consulting the office goldfish…',
-        'Polishing up the response just for you…',
-        'Convincing the AI to stop overthinking…',
-      ],
-    });
-
-    // Add eyes reaction
-    await client.reactions.add({
-      channel: channelId,
-      timestamp: threadTs,
-      name: 'eyes',
-    });
-
-    // Run the agent
-    const { responseText, sessionId: newSessionId } = await runCaseyAgent(userMessage);
-
-    // Stream the response in thread with feedback buttons
-    const streamer = client.chatStream({
-      channel: channelId,
-      recipient_team_id: teamId,
-      recipient_user_id: userId,
-      thread_ts: threadTs,
-    });
-    await streamer.append({ markdown_text: responseText });
-    const feedbackBlocks = createFeedbackBlock();
-    await streamer.stop({ blocks: feedbackBlocks });
-
-    // Store conversation session
-    if (newSessionId) {
-      sessionStore.setSession(channelId, threadTs, newSessionId);
-    }
   } catch (e) {
     logger.error(`Failed to handle issue submission: ${e}`);
   }

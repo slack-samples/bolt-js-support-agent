@@ -1,8 +1,8 @@
 /**
- * Create the feedback buttons block for agent responses.
+ * Build the feedback buttons blocks for agent responses.
  * @returns {import('@slack/types').KnownBlock[]}
  */
-export function createFeedbackBlock() {
+export function buildFeedbackBlocks() {
   return [
     {
       type: 'context_actions',
