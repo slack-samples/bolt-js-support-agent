@@ -9,6 +9,7 @@ const app = new App({
   appToken: process.env.SLACK_APP_TOKEN,
   socketMode: true,
   logLevel: LogLevel.DEBUG,
+  ignoreSelf: false,
 });
 
 registerListeners(app);
