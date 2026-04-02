@@ -31,3 +31,5 @@ jobs:
         run: npm run lint
       - name: Type check JavaScript with tsc
         run: npm run check
+      - name: Run unit tests
+        run: npm test

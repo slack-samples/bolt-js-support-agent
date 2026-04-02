@@ -59,4 +59,5 @@ All implementations use [Biome](https://biomejs.dev/) for linting and formatting
 
 - **Biome lint** — Runs on push to `main` and all PRs across both implementations
 - **Type check** — `npm run check` runs `tsc --checkJs` on JavaScript files
+- **Unit tests** — `npm test` runs the Node.js built-in test runner in each implementation
 - **Dependabot** — Weekly npm and GitHub Actions updates, auto-merge for minor/patch

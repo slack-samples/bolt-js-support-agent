@@ -30,37 +30,29 @@ npm run lint:fix     # Auto-fix lint and format issues
 npm run check        # Type check JavaScript with tsc (checkJs)
 ```
 
-## Folder Structure
+## Testing
 
+Tests use the Node.js built-in test runner (`node:test`) and assertion module (`node:assert`).
+
+```sh
+npm test             # Run all tests
 ```
-app.js                            # Entry point — Bolt app setup and start
-manifest.json                     # Slack app manifest (Socket Mode)
-agent/
-  casey.js                        # Agent definition (Claude Agent SDK)
-  index.js                        # Agent exports
-  tools/                          # Hardcoded IT helpdesk tools
-    knowledge-base.js             # 8 KB articles, keyword search
-    password-reset.js             # Simulated password reset
-    system-status.js              # 9 systems with hardcoded statuses
-    ticket.js                     # Random ticket ID generator
-    user-permissions.js           # Simulated permission check/grant
-thread-context/
-  store.js                        # SessionStore — stores session IDs only
-listeners/
-  events/
-    message.js                    # DM and channel thread handler — runs agent, streams response
-    app-mentioned.js              # Channel @Casey mention handler
-    app-home-opened.js            # Publishes App Home view
-    assistant-thread-started.js   # Sets suggested prompts
-  actions/
-    issue-buttons.js              # Opens issue submission modal
-    feedback-buttons.js           # Handles thumbs up/down reactions
-  views/
-    issue-modal.js                # Modal submission — posts DM with metadata
-    app-home-builder.js           # App Home Block Kit view
-    issue-modal-builder.js        # Issue modal Block Kit view
-    feedback-builder.js           # Feedback buttons (raw Block Kit JSON)
-```
+
+### Conventions
+
+- Test files live in `tests/` and mirror the source directory structure
+- File naming: `<source-file>.test.js` (not `.spec.js`)
+- Use `describe()` / `it()` / `beforeEach()` blocks from `node:test`
+- Use `mock.fn()` from `node:test` for mocking — no external mock libraries
+- Assertions use `node:assert` (`strictEqual`, `ok`, `deepStrictEqual`)
+- Mock Slack client methods as `mock.fn()` objects with the needed nested structure
+- Test files use ES module `import` statements (`"type": "module"`)
+
+### What to Test
+
+- **View builders** — pure functions, test structure and data correctness
+- **Listener handlers** — mock `ack`, `client`, `context`, `logger`; verify API calls and error handling
+- **SessionStore** — instantiate directly, test CRUD, TTL expiry, and eviction
 
 ## Architecture
 
@@ -102,7 +94,3 @@ export const myTool = tool(
   })
 );
 ```
-
-### Zod Version
-
-This implementation requires **Zod v4** (`zod@^4.0.0`) as a peer dependency of the Claude Agent SDK.
