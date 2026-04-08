@@ -7,10 +7,9 @@ import { buildFeedbackBlocks } from '../views/feedback-builder.js';
  * @param {import('@slack/bolt').AllMiddlewareArgs & import('@slack/bolt').SlackEventMiddlewareArgs<'app_mention'>} args
  * @returns {Promise<void>}
  */
-export async function handleAppMentioned({ client, context, event, logger, say }) {
+export async function handleAppMentioned({ client, context, event, logger, say, sayStream, setStatus }) {
   try {
     const channelId = event.channel;
-    const teamId = context.teamId;
     const text = event.text || '';
     const threadTs = event.thread_ts || event.ts;
     const userId = context.userId;
@@ -36,9 +35,7 @@ export async function handleAppMentioned({ client, context, event, logger, say }
     }
 
     // Set assistant thread status with loading messages
-    await client.assistant.threads.setStatus({
-      channel_id: channelId,
-      thread_ts: threadTs,
+    await setStatus({
       status: 'Thinking…',
       loading_messages: [
         'Teaching the hamsters to type faster…',
@@ -57,12 +54,7 @@ export async function handleAppMentioned({ client, context, event, logger, say }
     const { responseText, sessionId: newSessionId } = await runCaseyAgent(cleanedText, existingSessionId, deps);
 
     // Stream response in thread with feedback buttons
-    const streamer = client.chatStream({
-      channel: channelId,
-      recipient_team_id: teamId,
-      recipient_user_id: userId,
-      thread_ts: threadTs,
-    });
+    const streamer = sayStream();
     await streamer.append({ markdown_text: responseText });
     const feedbackBlocks = buildFeedbackBlocks();
     await streamer.stop({ blocks: feedbackBlocks });

@@ -12,7 +12,7 @@
   },
   "dependencies": {
     "@openai/agents": "^0.8.0",
-    "@slack/bolt": "^4.6.0",
+    "@slack/bolt": "^4.7.0",
     "dotenv": "~17.3.1"
   },
   "devDependencies": {
