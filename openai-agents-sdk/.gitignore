@@ -1,4 +1,6 @@
 node_modules/
-.DS_Store
 .env.*
 !.env.sample
+
+# macOS
+.DS_Store
