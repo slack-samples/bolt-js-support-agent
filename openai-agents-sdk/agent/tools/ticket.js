@@ -13,10 +13,8 @@ export const createSupportTicket = tool({
     description: z
       .string()
       .describe('A detailed description of the problem and any troubleshooting already attempted.'),
-    priority: z.string().describe("The ticket priority level — one of 'low', 'medium', 'high', or 'critical'."),
-    category: z
-      .string()
-      .describe("The issue category — one of 'hardware', 'software', 'network', 'access', or 'other'."),
+    priority: z.enum(['low', 'medium', 'high', 'critical']).describe('The ticket priority level.'),
+    category: z.enum(['hardware', 'software', 'network', 'access', 'other']).describe('The issue category.'),
   }),
   execute: async ({ title, priority, category }) => {
     const ticketId = `INC-${Math.floor(100000 + Math.random() * 900000)}`;
