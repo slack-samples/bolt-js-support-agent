@@ -1,0 +1,15 @@
+version: 2
+updates:
+  - package-ecosystem: "npm"
+    directories:
+      - "/openai-agents-sdk"
+      - "/claude-agent-sdk"
+    schedule:
+      interval: "weekly"
+    labels:
+      - "npm"
+      - "dependencies"
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
