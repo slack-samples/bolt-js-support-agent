@@ -10,7 +10,7 @@ This repo contains the same app built with two different AI agent frameworks. Pi
 
 | App | Framework | Get started | Directory |
 |-----|-----------|-------------|-----------|
-| **Claude Agent SDK** | [claude-agent-sdk](https://docs.anthropic.com/en/docs/agents/claude-agent-sdk) | [View README](./claude-agent-sdk/README.md) | `claude-agent-sdk/` |
+| **Claude Agent SDK** | [claude-agent-sdk](https://platform.claude.com/docs/en/agent-sdk/overview) | [View README](./claude-agent-sdk/README.md) | `claude-agent-sdk/` |
 | **OpenAI Agents SDK** | [openai-agents](https://openai.github.io/openai-agents-js/) | [View README](./openai-agents-sdk/README.md) | `openai-agents-sdk/` |
 
 All implementations share the same Slack listener layer, the same five simulated IT tools, and the same user experience. The only difference is how the agent is defined and executed under the hood.

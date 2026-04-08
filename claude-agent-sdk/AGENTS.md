@@ -1,6 +1,6 @@
 # AGENTS.md - claude-agent-sdk
 
-JavaScript implementation of Casey using the [Claude Agent SDK](https://platform.claude.com/docs/en/agent-sdk) (`@anthropic-ai/claude-agent-sdk`).
+JavaScript implementation of Casey using the [Claude Agent SDK](https://platform.claude.com/docs/en/agent-sdk/overview) (`@anthropic-ai/claude-agent-sdk`).
 
 See the [root AGENTS.md](../AGENTS.md) for monorepo-wide architecture and shared patterns.
 

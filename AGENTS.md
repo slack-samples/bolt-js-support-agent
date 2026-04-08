@@ -11,7 +11,7 @@ Casey can search a knowledge base, reset passwords, check system status, create 
 | Directory | Agent Framework |
 |-----------|-----------------|
 | `openai-agents-sdk/` | [OpenAI Agents SDK](https://openai.github.io/openai-agents-js/) |
-| `claude-agent-sdk/` | [Claude Agent SDK](https://platform.claude.com/docs/en/agent-sdk) |
+| `claude-agent-sdk/` | [Claude Agent SDK](https://platform.claude.com/docs/en/agent-sdk/overview) |
 
 See each implementation's `AGENTS.md` for setup, commands, folder structure, and SDK-specific architecture details.
 
