@@ -33,10 +33,4 @@ Casey also works with the [Slack MCP Server](https://docs.slack.dev/agents-ai/mo
 
 ## Local Development
 
-This repo uses a vendored (pre-release) build of `@slack/bolt` from the [bolt-js](https://github.com/slackapi/bolt-js) `main` branch. The `.tgz` file lives in `vendor/` and is referenced by each app's `package.json`.
-
-To update the vendored bolt-js to the latest `main`, run the Claude Code slash command:
-
-```
-/project:vendor-bolt
-```
+This repo uses [`@slack/bolt`](https://www.npmjs.com/package/@slack/bolt) from npm.
