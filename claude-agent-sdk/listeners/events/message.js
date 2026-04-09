@@ -60,7 +60,7 @@ export async function handleMessage({ client, context, event, logger, say, saySt
 
     // For issue submissions the bot posted the message, so the real
     // user_id comes from the metadata rather than the event context.
-    const userId = issueMetadata ? issueMetadata.event_payload.user_id : context.userId;
+    const userId = /** @type {string} */ (issueMetadata ? issueMetadata.event_payload.user_id : context.userId);
 
     const existingSessionId = sessionStore.getSession(channelId, threadTs);
 
