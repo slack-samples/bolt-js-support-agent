@@ -36,9 +36,12 @@ export const CATEGORIES = [
 
 /**
  * Build the App Home view for Casey.
+ * @param {string | null} [installUrl] - OAuth install URL shown when MCP is disconnected.
+ * @param {boolean} [isConnected] - Whether the Slack MCP Server is connected.
  * @returns {import('@slack/types').HomeView}
  */
-export function buildAppHomeView() {
+export function buildAppHomeView(installUrl = null, isConnected = false) {
+  /** @type {import('@slack/types').KnownBlock[]} */
   const blocks = [
     {
       type: 'header',
@@ -71,7 +74,6 @@ export function buildAppHomeView() {
         value: cat.value,
       })),
     },
-    { type: 'divider' },
     {
       type: 'context',
       elements: [
@@ -81,7 +83,48 @@ export function buildAppHomeView() {
         },
       ],
     },
+    { type: 'divider' },
   ];
+
+  if (isConnected) {
+    blocks.push(
+      {
+        type: 'section',
+        text: {
+          type: 'mrkdwn',
+          text: '\ud83d\udfe2 *Slack MCP Server is connected.*',
+        },
+      },
+      {
+        type: 'context',
+        elements: [
+          {
+            type: 'mrkdwn',
+            text: 'Casey has access to search messages, read channels, and more.',
+          },
+        ],
+      },
+    );
+  } else if (installUrl) {
+    blocks.push(
+      {
+        type: 'section',
+        text: {
+          type: 'mrkdwn',
+          text: `\ud83d\udd34 *Slack MCP Server is disconnected.* <${installUrl}|Connect the Slack MCP Server.>`,
+        },
+      },
+      {
+        type: 'context',
+        elements: [
+          {
+            type: 'mrkdwn',
+            text: 'The Slack MCP Server enables Casey to search messages, read channels, and more.',
+          },
+        ],
+      },
+    );
+  }
 
   return { type: 'home', blocks };
 }

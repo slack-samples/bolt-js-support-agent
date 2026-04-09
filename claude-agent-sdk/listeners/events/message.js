@@ -87,7 +87,7 @@ export async function handleMessage({ client, context, event, logger, say, saySt
     });
 
     // Run the agent with deps for tool access
-    const deps = { client, userId, channelId, threadTs, messageTs: event.ts };
+    const deps = { client, userId, channelId, threadTs, messageTs: event.ts, userToken: context.userToken };
     const { responseText, sessionId: newSessionId } = await runCaseyAgent(text, existingSessionId, deps);
 
     // Stream response in thread with feedback buttons

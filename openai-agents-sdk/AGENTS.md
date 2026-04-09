@@ -7,7 +7,7 @@ See the [root AGENTS.md](../AGENTS.md) for monorepo-wide architecture and shared
 ## Setup
 
 ```sh
-cp .env.sample .env   # Fill in SLACK_BOT_TOKEN, SLACK_APP_TOKEN, OPENAI_API_KEY
+cp .env.sample .env   # Fill in OPENAI_API_KEY, SLACK_BOT_TOKEN, SLACK_APP_TOKEN
 npm install
 npm start
 ```
@@ -16,9 +16,13 @@ npm start
 
 | Variable | Description |
 |----------|-------------|
+| `OPENAI_API_KEY` | OpenAI API key |
 | `SLACK_BOT_TOKEN` | Bot token (`xoxb-`) |
 | `SLACK_APP_TOKEN` | App-level token (`xapp-`) for Socket Mode |
-| `OPENAI_API_KEY` | OpenAI API key |
+| `SLACK_CLIENT_ID` | OAuth client ID (for `app-oauth.js`) |
+| `SLACK_CLIENT_SECRET` | OAuth client secret (for `app-oauth.js`) |
+| `SLACK_SIGNING_SECRET` | Signing secret (for `app-oauth.js`) |
+| `SLACK_REDIRECT_URI` | OAuth redirect URI (for `app-oauth.js`) |
 
 ## Commands
 
@@ -75,7 +79,11 @@ After each agent run, `result.history` provides the updated history to store for
 
 ### Dependency Injection
 
-`agent/deps.js` defines a `CaseyDeps` class that holds `client`, `userId`, `channelId`, `threadTs`, and `messageTs`. This is passed as the `context` parameter to `run()` and is available in tool `execute` functions via `context.deps`.
+`agent/deps.js` defines a `CaseyDeps` class that holds `client`, `userId`, `channelId`, `threadTs`, `messageTs`, and `userToken`. This is passed as the `context` parameter to `run()` and is available in tool `execute` functions via `context.context`.
+
+### Slack MCP Server
+
+`support-agent.js` exports a `runCasey(inputItems, deps)` function that wraps agent execution. When `deps.userToken` is present, it connects to the Slack MCP Server (`https://mcp.slack.com/mcp`) via `MCPServerStreamableHttp`, clones the agent with the MCP server attached, and runs it. The MCP connection is always closed in a `finally` block.
 
 ### Tool Definitions
 

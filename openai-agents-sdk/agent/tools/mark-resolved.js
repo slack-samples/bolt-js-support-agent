@@ -9,7 +9,7 @@ export const markResolved = tool({
     'Call this once when the issue is fully resolved — e.g. password reset complete, ticket created, problem fixed.',
   parameters: z.object({}),
   execute: async (_args, context) => {
-    const deps = context.deps;
+    const deps = /** @type {import('../deps.js').CaseyDeps} */ (context?.context);
 
     try {
       await deps.client.reactions.add({
@@ -19,7 +19,8 @@ export const markResolved = tool({
       });
       return 'Thread marked as resolved.';
     } catch (e) {
-      return `Could not mark resolved: ${e.data?.error || e.message}`;
+      const err = /** @type {any} */ (e);
+      return `Could not mark resolved: ${err.data?.error || err.message}`;
     }
   },
 });

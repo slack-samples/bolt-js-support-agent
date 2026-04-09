@@ -1,6 +1,4 @@
-import { run } from '@openai/agents';
-
-import { CaseyDeps, caseyAgent } from '../../agent/index.js';
+import { CaseyDeps, runCasey } from '../../agent/index.js';
 import { conversationStore } from '../../thread-context/index.js';
 import { buildFeedbackBlocks } from '../views/feedback-builder.js';
 
@@ -93,8 +91,8 @@ export async function handleMessage({ client, context, event, logger, say, saySt
     /** @type {string | import('@openai/agents').AgentInputItem[]} */
     const inputItems = history ? [...history, { role: 'user', content: text }] : text;
 
-    const deps = new CaseyDeps(client, userId, channelId, threadTs, event.ts);
-    const result = await run(caseyAgent, inputItems, { context: deps });
+    const deps = new CaseyDeps(client, userId, channelId, threadTs, event.ts, context.userToken);
+    const result = await runCasey(inputItems, deps);
 
     // Stream response in thread with feedback buttons
     const streamer = sayStream();

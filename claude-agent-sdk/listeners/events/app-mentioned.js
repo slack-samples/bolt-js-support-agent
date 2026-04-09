@@ -50,7 +50,7 @@ export async function handleAppMentioned({ client, context, event, logger, say, 
     const existingSessionId = sessionStore.getSession(channelId, threadTs);
 
     // Run the agent with deps for tool access
-    const deps = { client, userId, channelId, threadTs, messageTs: event.ts };
+    const deps = { client, userId, channelId, threadTs, messageTs: event.ts, userToken: context.userToken };
     const { responseText, sessionId: newSessionId } = await runCaseyAgent(cleanedText, existingSessionId, deps);
 
     // Stream response in thread with feedback buttons

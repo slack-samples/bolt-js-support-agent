@@ -18,7 +18,28 @@
     }
   },
   "oauth_config": {
+    "redirect_urls": ["https://ngrok-free.app/slack/oauth_redirect"],
     "scopes": {
+      "user": [
+        "search:read",
+        "channels:history",
+        "channels:read",
+        "groups:history",
+        "groups:read",
+        "im:history",
+        "mpim:history",
+        "users:read",
+        "search:read.public",
+        "search:read.private",
+        "search:read.mpim",
+        "search:read.im",
+        "search:read.files",
+        "search:read.users",
+        "chat:write",
+        "canvases:read",
+        "canvases:write",
+        "users:read.email"
+      ],
       "bot": [
         "app_mentions:read",
         "channels:history",
@@ -36,6 +57,7 @@
   },
   "settings": {
     "event_subscriptions": {
+      "request_url": "https://ngrok-free.app/slack/events",
       "bot_events": [
         "app_home_opened",
         "app_mention",
@@ -46,7 +68,8 @@
       ]
     },
     "interactivity": {
-      "is_enabled": true
+      "is_enabled": true,
+      "request_url": "https://ngrok-free.app/slack/events"
     },
     "org_deploy_enabled": true,
     "socket_mode_enabled": true,

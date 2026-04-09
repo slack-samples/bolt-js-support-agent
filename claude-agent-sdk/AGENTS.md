@@ -7,7 +7,7 @@ See the [root AGENTS.md](../AGENTS.md) for monorepo-wide architecture and shared
 ## Setup
 
 ```sh
-cp .env.sample .env   # Fill in SLACK_BOT_TOKEN, SLACK_APP_TOKEN, ANTHROPIC_API_KEY
+cp .env.sample .env   # Fill in ANTHROPIC_API_KEY, SLACK_BOT_TOKEN, SLACK_APP_TOKEN
 npm install
 npm start
 ```
@@ -16,9 +16,13 @@ npm start
 
 | Variable | Description |
 |----------|-------------|
+| `ANTHROPIC_API_KEY` | Anthropic API key |
 | `SLACK_BOT_TOKEN` | Bot token (`xoxb-`) |
 | `SLACK_APP_TOKEN` | App-level token (`xapp-`) for Socket Mode |
-| `ANTHROPIC_API_KEY` | Anthropic API key |
+| `SLACK_CLIENT_ID` | OAuth client ID (for `app-oauth.js`) |
+| `SLACK_CLIENT_SECRET` | OAuth client secret (for `app-oauth.js`) |
+| `SLACK_SIGNING_SECRET` | Signing secret (for `app-oauth.js`) |
+| `SLACK_REDIRECT_URI` | OAuth redirect URI (for `app-oauth.js`) |
 
 ## Commands
 
@@ -75,7 +79,7 @@ The store uses a `Map` keyed by `${channelId}:${threadTs}` with TTL-based cleanu
 
 ### Dependency Injection
 
-`runCaseyAgent(text, sessionId, deps)` accepts an optional `deps` object with `{ client, userId, channelId, threadTs, messageTs }`. Tools that need Slack API access (emoji reactions, mark resolved) are created as closures inside `runCaseyAgent()` that capture the `deps` parameter. Static tools (knowledge base, tickets, etc.) remain as module-level exports in `agent/tools/`.
+`runCaseyAgent(text, sessionId, deps)` accepts an optional `deps` object with `{ client, userId, channelId, threadTs, messageTs, userToken }`. Tools that need Slack API access (emoji reactions, mark resolved) are created as closures inside `runCaseyAgent()` that capture the `deps` parameter. Static tools (knowledge base, tickets, etc.) remain as module-level exports in `agent/tools/`.
 
 ### Tool Definitions
 

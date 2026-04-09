@@ -25,7 +25,7 @@ export const addEmojiReaction = tool({
     emoji_name: z.string().describe("The Slack emoji name without colons (e.g. 'tada', 'wrench', 'pray')."),
   }),
   execute: async ({ emoji_name }, context) => {
-    const deps = context.deps;
+    const deps = /** @type {import('../deps.js').CaseyDeps} */ (context?.context);
 
     // Skip ~15% of reactions to feel more natural
     if (Math.random() < 0.15) {
@@ -40,7 +40,8 @@ export const addEmojiReaction = tool({
       });
       return `Reacted with :${emoji_name}:`;
     } catch (e) {
-      return `Could not add reaction: ${e.data?.error || e.message}`;
+      const err = /** @type {any} */ (e);
+      return `Could not add reaction: ${err.data?.error || err.message}`;
     }
   },
 });

@@ -22,6 +22,10 @@ Casey uses five simulated tools to assist users:
 
 > **Note:** All tools return simulated data for demonstration purposes. In a production app, these would connect to your actual IT systems.
 
+### Slack MCP Server
+
+Casey also works with the [Slack MCP Server](https://docs.slack.dev/agents-ai/model-context-protocol), giving it the ability to search messages and files, read channel history and threads, send messages, schedule messages, and create or update Slack canvases. When deployed with OAuth (HTTP mode), Casey automatically connects to the Slack MCP Server using the user's token, unlocking these capabilities on top of the built-in IT tools.
+
 ## Setup
 
 Before getting started, make sure you have a development workspace where you have permissions to install apps.
@@ -103,8 +107,7 @@ npm install
 This app uses Claude through the Claude Agent SDK.
 
 1. Create an API key from your [Anthropic dashboard](https://console.anthropic.com/settings/keys).
-2. Rename `.env.sample` to `.env`.
-3. Save the Anthropic API key to `.env`:
+2. Save the Anthropic API key to `.env`:
 
 ```sh
 ANTHROPIC_API_KEY=YOUR_ANTHROPIC_API_KEY
@@ -131,6 +134,101 @@ slack run
 ```sh
 npm start
 ```
+
+</details>
+
+<details><summary><strong>Using OAuth HTTP Server (with ngrok)</strong></summary>
+
+#### OAuth HTTP Server
+
+This mode uses an HTTP server instead of Socket Mode, which is required for OAuth-based distribution.
+
+1. Install [ngrok](https://ngrok.com/download) and start a tunnel:
+
+```sh
+ngrok http 3000
+```
+
+2. Copy the `https://*.ngrok-free.app` URL from the ngrok output.
+
+<details><summary><strong>Using Slack CLI</strong></summary>
+
+#### Slack CLI
+
+3. Update `manifest.json` for HTTP mode:
+   - Set `socket_mode_enabled` to `false`
+   - Replace `ngrok-free.app` with your ngrok domain (e.g. `YOUR_NGROK_SUBDOMAIN.ngrok-free.app`)
+
+4. Create a new local dev app:
+
+```sh
+slack install -E local
+```
+
+5. Enable MCP for your app:
+   - Run `slack app settings` to open your app's settings
+   - Navigate to **Agents & AI Apps** in the left-side navigation
+   - Toggle **Model Context Protocol** on
+
+6. Update your `.env` OAuth environment variables:
+   - Run `slack app settings` to open App Settings
+   - Copy **Client ID**, **Client Secret**, and **Signing Secret**
+   - Update `SLACK_REDIRECT_URI` in `.env` with your ngrok domain
+
+```sh
+SLACK_CLIENT_ID=YOUR_CLIENT_ID
+SLACK_CLIENT_SECRET=YOUR_CLIENT_SECRET
+SLACK_SIGNING_SECRET=YOUR_SIGNING_SECRET
+SLACK_REDIRECT_URI=https://YOUR_NGROK_SUBDOMAIN.ngrok-free.app/slack/oauth_redirect
+```
+
+7. Start the app:
+
+```sh
+slack run app-oauth.js
+```
+
+8. Click the install URL printed in the terminal to install the app to your workspace via OAuth.
+
+</details>
+
+<details><summary><strong>Using the Terminal</strong></summary>
+
+#### Terminal
+
+3. Create your Slack app at [api.slack.com/apps/new](https://api.slack.com/apps/new) using [`manifest.json`](./manifest.json). Before pasting the manifest, set `socket_mode_enabled` to `false` and replace `ngrok-free.app` with your ngrok domain.
+
+4. Install the app to your workspace and copy the following values into your `.env`:
+   - **Signing Secret** — from _Basic Information_
+   - **Bot User OAuth Token** — from _OAuth & Permissions_
+   - **Client ID** and **Client Secret** — from _Basic Information_
+
+```sh
+SLACK_BOT_TOKEN=xoxb-YOUR_BOT_TOKEN
+SLACK_CLIENT_ID=YOUR_CLIENT_ID
+SLACK_CLIENT_SECRET=YOUR_CLIENT_SECRET
+SLACK_SIGNING_SECRET=YOUR_SIGNING_SECRET
+SLACK_REDIRECT_URI=https://YOUR_NGROK_SUBDOMAIN.ngrok-free.app/slack/oauth_redirect
+```
+
+Replace `your-subdomain` in `SLACK_REDIRECT_URI` with your ngrok subdomain.
+
+5. Enable MCP for your app:
+   - Open your app at [api.slack.com/apps](https://api.slack.com/apps)
+   - Navigate to **Agents & AI Apps** in the left-side navigation
+   - Toggle **Model Context Protocol** on
+
+6. Start the app:
+
+```sh
+node app-oauth.js
+```
+
+7. Click the install URL printed in the terminal to install the app to your workspace via OAuth.
+
+</details>
+
+> **Note:** Each time ngrok restarts, it generates a new URL. You'll need to update the ngrok domain in `manifest.json`, `SLACK_REDIRECT_URI` in your `.env`, and re-install the app.
 
 </details>
 
@@ -173,6 +271,10 @@ npm test
 
 `app.js` is the entry point for the application and is the file you'll run to start the server. This project aims to keep this file as thin as possible, primarily using it as a way to route inbound requests.
 
+### `app-oauth.js`
+
+`app-oauth.js` is an alternative entry point that runs the app in HTTP mode instead of Socket Mode. This is intended for deployments that use OAuth for app distribution. See the OAuth HTTP Server section under Development for setup instructions.
+
 ### `/listeners`
 
 Every incoming request is routed to a "listener". This directory groups each listener based on the Slack Platform feature used.
@@ -207,3 +309,19 @@ The `tools` directory contains five IT helpdesk tools defined using `tool()` fro
 ### `/thread-context`
 
 The `store.js` file implements an in-memory session ID store, keyed by channel and thread. The Claude Agent SDK manages conversation history server-side via sessions, so only session IDs need to be tracked locally for resuming conversations. The store has TTL-based cleanup (1 hour) and a max entry limit (1000).
+
+## Troubleshooting
+
+### MCP Server connection error: `App is not enabled for Slack MCP server access`
+
+If you see an error like:
+
+```
+Error: Streamable HTTP error: Error POSTing to endpoint: {"jsonrpc":"2.0","id":null,"error":{"code":-32600,"message":"App is not enabled for Slack MCP server access. Please enable it here: https://api.slack.com/apps/YOUR_APP_ID/app-assistant"}}
+```
+
+This means the Slack MCP feature has not been enabled for your app. There is no manifest property for this yet, so it must be toggled on manually:
+
+1. Run `slack app settings` to open your app's settings page (or visit [api.slack.com/apps](https://api.slack.com/apps) and select your app)
+2. Navigate to **Agents & AI Apps** in the left-side navigation
+3. Toggle **Slack Model Context Protocol** on

@@ -1,4 +1,4 @@
-import { Agent } from '@openai/agents';
+import { Agent, MCPServerStreamableHttp, run } from '@openai/agents';
 
 import {
   addEmojiReaction,
@@ -87,6 +87,8 @@ asks you to perform a Slack action like sending a message or creating a canvas.
 - Do not promise specific resolution times unless the tool response includes them
 - If unsure about a user's issue, ask clarifying questions before taking action`;
 
+const SLACK_MCP_URL = 'https://mcp.slack.com/mcp';
+
 export const caseyAgent = new Agent({
   name: 'Casey',
   instructions: CASEY_SYSTEM_PROMPT,
@@ -101,3 +103,28 @@ export const caseyAgent = new Agent({
   ],
   model: 'gpt-4.1-mini',
 });
+
+/**
+ * Run the Casey agent, optionally connecting to the Slack MCP server.
+ * @param {string | import('@openai/agents').AgentInputItem[]} inputItems
+ * @param {import('./deps.js').CaseyDeps} deps
+ * @returns {Promise<import('@openai/agents').RunResult<any, any>>}
+ */
+export async function runCasey(inputItems, deps) {
+  if (deps.userToken) {
+    const mcpServer = new MCPServerStreamableHttp({
+      url: SLACK_MCP_URL,
+      requestInit: { headers: { Authorization: `Bearer ${deps.userToken}` } },
+    });
+
+    try {
+      await mcpServer.connect();
+      const agentWithMcp = caseyAgent.clone({ mcpServers: [mcpServer] });
+      return await run(agentWithMcp, inputItems, { context: deps });
+    } finally {
+      await mcpServer.close();
+    }
+  }
+
+  return await run(caseyAgent, inputItems, { context: deps });
+}

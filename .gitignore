@@ -1,78 +1,17 @@
 # Build
-build/Release
-dist
-lib-cov
-out
+.bolt-js-build/
 
-# Coverage
-coverage
-*.lcov
-.nyc_output
+# Claude Code
+.claude/*.local.json
 
-# Dependencies
-bower_components
-jspm_packages/
-node_modules/
-web_modules/
-
-# Environment
-.env
-.env.*
-!.env.example
-!.env.sample
-
-# Logs
-logs
-*.log
-lerna-debug.log*
-npm-debug.log*
-report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
-vite.config.js.timestamp-*
-vite.config.ts.timestamp-*
-yarn-debug.log*
-yarn-error.log*
+# Git
+.worktrees/
 
 # macOS
 .DS_Store
 
-# Node.js
-.cache
-.eslintcache
-.grunt
-.lock-wscript
-.node_repl_history
-.npm
-.stylelintcache
-.tern-port
-*.pid
-*.pid.lock
-*.seed
-*.tgz
-*.tsbuildinfo
-pids
-
-# Tooling
-.docusaurus
-.dynamodb/
-.firebase/
-.fusebox/
-.next
-.nuxt
-.parcel-cache
-.serverless/
-.svelte-kit/
-.temp
-.vscode-test
-.vuepress/dist
-**/.vitepress/cache
-**/.vitepress/dist
-
-# Yarn
-.pnp.*
-.yarn-integrity
-.yarn/*
-!.yarn/patches
-!.yarn/plugins
-!.yarn/releases
-!.yarn/sdks
-!.yarn/versions
+# Slack CLI
+*/.slack/apps.json
+*/.slack/apps.dev.json
+*/.slack/cache/
+*/.slack/config.json

@@ -4,7 +4,9 @@
 
 A monorepo containing two parallel implementations of **Casey**, an AI-powered IT helpdesk agent for Slack built with [Bolt for JavaScript](https://github.com/slackapi/bolt-js). Both implementations are functionally identical from the Slack user's perspective but use different AI agent frameworks.
 
-Casey can search a knowledge base, reset passwords, check system status, create tickets, and manage user permissions. All tool data is hardcoded for demo purposes.
+Casey can search a knowledge base, reset passwords, check system status, create tickets, and manage user permissions. When deployed with OAuth, Casey also connects to the [Slack MCP Server](https://docs.slack.dev/agents-ai/model-context-protocol) for searching messages, reading channels, sending messages, and managing canvases. All tool data is hardcoded for demo purposes.
+
+This repo uses a vendored (pre-release) build of `@slack/bolt` from the [bolt-js](https://github.com/slackapi/bolt-js) `main` branch. The `.tgz` file lives in `vendor/` and is referenced by each app's `package.json`.
 
 ## Implementations
 
@@ -31,7 +33,7 @@ All implementations use [Biome](https://biomejs.dev/) for linting and formatting
 
 ### Shared Patterns Across All Implementations
 
-- **Bolt for JavaScript** (`@slack/bolt`) with Socket Mode for all Slack communication
+- **Bolt for JavaScript** (`@slack/bolt`) with Socket Mode (or HTTP mode via `app-oauth.js`) for Slack communication
 - **Listener registration** — `listeners/index.js` calls sub-registrars for events, actions, and views
 - **Streaming responses** — DM and mention handlers use `client.chatStream()` to show typing indicators
 - **Emoji reactions** — `:eyes:` on first message, agent-driven contextual emoji via `add_emoji_reaction` tool, `:white_check_mark:` on resolution via `mark_resolved` tool
@@ -52,6 +54,7 @@ All implementations use [Biome](https://biomejs.dev/) for linting and formatting
 | Conversation | Server-side sessions (store session ID only) | Client-side history (store full message array) |
 | Store directory | `thread-context/` | `thread-context/` |
 | Store class | `SessionStore` | `ConversationStore` |
+| MCP Server | Dynamic MCP server config in `runCaseyAgent()` | `runCasey()` wrapper with `MCPServerStreamableHttp` |
 | Dependencies | Closure-based deps in `runCaseyAgent()` | `CaseyDeps` class for dependency injection |
 | Model | `claude-sonnet-4-20250514` | `gpt-4.1-mini` |
 

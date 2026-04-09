@@ -113,6 +113,8 @@ const ALLOWED_TOOLS = [
   'trigger_password_reset',
 ];
 
+const SLACK_MCP_URL = 'https://mcp.slack.com/mcp';
+
 /**
  * @typedef {Object} CaseyDeps
  * @property {import('@slack/web-api').WebClient} client
@@ -120,6 +122,7 @@ const ALLOWED_TOOLS = [
  * @property {string} channelId
  * @property {string} threadTs
  * @property {string} messageTs
+ * @property {string} [userToken]
  */
 
 /**
@@ -157,7 +160,8 @@ export async function runCaseyAgent(text, sessionId = undefined, deps = undefine
         });
         return { content: [{ type: 'text', text: `Reacted with :${emoji_name}:` }] };
       } catch (e) {
-        return { content: [{ type: 'text', text: `Could not add reaction: ${e.data?.error || e.message}` }] };
+        const err = /** @type {any} */ (e);
+        return { content: [{ type: 'text', text: `Could not add reaction: ${err.data?.error || err.message}` }] };
       }
     },
   );
@@ -180,7 +184,8 @@ export async function runCaseyAgent(text, sessionId = undefined, deps = undefine
         });
         return { content: [{ type: 'text', text: 'Thread marked as resolved.' }] };
       } catch (e) {
-        return { content: [{ type: 'text', text: `Could not mark resolved: ${e.data?.error || e.message}` }] };
+        const err = /** @type {any} */ (e);
+        return { content: [{ type: 'text', text: `Could not mark resolved: ${err.data?.error || err.message}` }] };
       }
     },
   );
@@ -199,11 +204,24 @@ export async function runCaseyAgent(text, sessionId = undefined, deps = undefine
     ],
   });
 
+  /** @type {Record<string, any>} */
+  const mcpServers = { 'casey-tools': caseyToolsServer };
+  const allowedTools = [...ALLOWED_TOOLS];
+
+  if (deps?.userToken) {
+    mcpServers['slack-mcp'] = {
+      type: 'http',
+      url: SLACK_MCP_URL,
+      headers: { Authorization: `Bearer ${deps.userToken}` },
+    };
+    allowedTools.push('mcp__slack-mcp__*');
+  }
+
   /** @type {import('@anthropic-ai/claude-agent-sdk').Options} */
   const options = {
     systemPrompt: CASEY_SYSTEM_PROMPT,
-    mcpServers: { 'casey-tools': caseyToolsServer },
-    allowedTools: ALLOWED_TOOLS,
+    mcpServers,
+    allowedTools,
     permissionMode: 'bypassPermissions',
     ...(sessionId && { resume: sessionId }),
   };

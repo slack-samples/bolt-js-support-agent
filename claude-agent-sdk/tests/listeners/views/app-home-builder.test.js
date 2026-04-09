@@ -30,6 +30,27 @@ describe('buildAppHomeView', () => {
       assert.ok(typeof element.value === 'string');
     }
   });
+
+  it('does not show MCP status by default', () => {
+    const view = buildAppHomeView();
+    const mrkdwnTexts = view.blocks.filter((b) => b.type === 'section').map((b) => b.text.text);
+    const hasMcp = mrkdwnTexts.some((t) => t.includes('MCP Server'));
+    assert.strictEqual(hasMcp, false);
+  });
+
+  it('shows disconnected status when installUrl is provided', () => {
+    const view = buildAppHomeView('https://example.com/slack/install');
+    const mrkdwnTexts = view.blocks.filter((b) => b.type === 'section').map((b) => b.text.text);
+    const hasDisconnected = mrkdwnTexts.some((t) => t.includes('disconnected'));
+    assert.strictEqual(hasDisconnected, true);
+  });
+
+  it('shows connected status when isConnected is true', () => {
+    const view = buildAppHomeView(null, true);
+    const mrkdwnTexts = view.blocks.filter((b) => b.type === 'section').map((b) => b.text.text);
+    const hasConnected = mrkdwnTexts.some((t) => t.includes('connected'));
+    assert.strictEqual(hasConnected, true);
+  });
 });
 
 describe('CATEGORIES', () => {

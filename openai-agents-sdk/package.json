@@ -8,11 +8,11 @@
     "start": "node app.js",
     "lint": "npx @biomejs/biome check .",
     "lint:fix": "npx @biomejs/biome check --write .",
-    "test": "node --test 'tests/**/*.test.js'"
+    "test": "node --test"
   },
   "dependencies": {
     "@openai/agents": "^0.8.3",
-    "@slack/bolt": "^4.7.0",
+    "@slack/bolt": "file:../vendor/slack-bolt-4.7.0.tgz",
     "dotenv": "~17.4.1"
   },
   "devDependencies": {
