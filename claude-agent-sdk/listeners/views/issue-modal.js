@@ -10,14 +10,14 @@ export async function handleIssueSubmission({ ack, body, client, context, logger
   await ack();
 
   try {
-    const userId = context.userId;
+    const userId = /** @type {string} */ (context.userId);
     const values = body.view.state.values;
-    const category = values.category_block.category_select.selected_option.value;
-    const description = values.description_block.description_input.value;
+    const category = /** @type {string} */ (values.category_block.category_select.selected_option?.value);
+    const description = /** @type {string} */ (values.description_block.description_input.value);
 
     // Open a DM with the user
     const dm = await client.conversations.open({ users: userId });
-    const channelId = dm.channel.id;
+    const channelId = /** @type {string} */ (dm.channel?.id);
 
     // Post the issue message with metadata so the message handler can
     // identify it and run the agent on behalf of the original user
@@ -27,7 +27,7 @@ export async function handleIssueSubmission({ ack, body, client, context, logger
       text: userMessage,
       metadata: {
         event_type: 'issue_submission',
-        event_payload: { user_id: userId },
+        event_payload: { user_id: /** @type {string} */ (userId) },
       },
     });
   } catch (e) {

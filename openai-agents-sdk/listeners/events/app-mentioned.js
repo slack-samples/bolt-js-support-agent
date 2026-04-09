@@ -12,7 +12,7 @@ export async function handleAppMentioned({ client, context, event, logger, say, 
     const channelId = event.channel;
     const text = event.text || '';
     const threadTs = event.thread_ts || event.ts;
-    const userId = context.userId;
+    const userId = /** @type {string} */ (context.userId);
 
     // Strip the bot mention from the text
     const cleanedText = text.replace(/<@[A-Z0-9]+>/g, '').trim();

@@ -46,7 +46,7 @@ export async function handleMessage({ client, context, event, logger, say, saySt
     // DMs are always handled
   } else if (isThreadReply) {
     // Channel thread replies are handled only if the bot is already engaged
-    const session = sessionStore.getSession(event.channel, event.thread_ts);
+    const session = sessionStore.getSession(event.channel, /** @type {string} */ (event.thread_ts));
     if (session === null) return;
   } else {
     // Top-level channel messages are handled by app_mentioned
@@ -88,7 +88,7 @@ export async function handleMessage({ client, context, event, logger, say, saySt
 
     // Run the agent with deps for tool access
     const deps = { client, userId, channelId, threadTs, messageTs: event.ts, userToken: context.userToken };
-    const { responseText, sessionId: newSessionId } = await runCaseyAgent(text, existingSessionId, deps);
+    const { responseText, sessionId: newSessionId } = await runCaseyAgent(text, existingSessionId ?? undefined, deps);
 
     // Stream response in thread with feedback buttons
     const streamer = sayStream();

@@ -7,9 +7,9 @@ export async function handleFeedbackButton({ ack, body, client, context, logger 
   await ack();
 
   try {
-    const userId = context.userId;
-    const channelId = body.channel.id;
-    const messageTs = body.message.ts;
+    const userId = /** @type {string} */ (context.userId);
+    const channelId = /** @type {string} */ (body.channel?.id);
+    const messageTs = /** @type {string} */ (body.message?.ts);
     const feedbackValue = body.actions[0].value;
 
     if (feedbackValue === 'good-feedback') {

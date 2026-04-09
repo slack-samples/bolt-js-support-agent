@@ -46,7 +46,7 @@ export async function handleMessage({ client, context, event, logger, say, saySt
     // DMs are always handled
   } else if (isThreadReply) {
     // Channel thread replies are handled only if the bot is already engaged
-    const history = conversationStore.getHistory(event.channel, event.thread_ts);
+    const history = conversationStore.getHistory(event.channel, /** @type {string} */ (event.thread_ts));
     if (history === null) return;
   } else {
     // Top-level channel messages are handled by app_mentioned
