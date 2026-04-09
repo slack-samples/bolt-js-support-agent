@@ -20,10 +20,10 @@ Update the vendored bolt-js tarball to the latest commit on the `main` branch.
 
 4. Update the tarball filename in `package.json` for both apps (`claude-agent-sdk/package.json`, `openai-agents-sdk/package.json`). Replace the existing `"@slack/bolt": "file:../vendor/slack-bolt-*.tgz"` value with the new filename.
 
-5. Run `npm install` in both app directories to update `package-lock.json`:
+5. Regenerate `package-lock.json` in both app directories by removing the old lock file and `node_modules`, then running a fresh install:
    ```
-   cd ../claude-agent-sdk && npm install
-   cd ../openai-agents-sdk && npm install
+   cd ../claude-agent-sdk && rm -rf node_modules package-lock.json && npm install
+   cd ../openai-agents-sdk && rm -rf node_modules package-lock.json && npm install
    ```
 
 6. Clean up the build directory:

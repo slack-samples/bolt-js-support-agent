@@ -14,10 +14,10 @@ Switch from the vendored bolt-js tarball to the latest published `@slack/bolt` p
 
 3. In both `package.json` files (`claude-agent-sdk/package.json`, `openai-agents-sdk/package.json`), replace the `"@slack/bolt": "file:../vendor/slack-bolt-*.tgz"` value with `"@slack/bolt": "^<version>"` using the version from step 1.
 
-4. Run `npm install` in both app directories to update `package-lock.json`:
+4. Regenerate `package-lock.json` in both app directories by removing the old lock file and `node_modules`, then running a fresh install:
    ```
-   cd claude-agent-sdk && npm install
-   cd ../openai-agents-sdk && npm install
+   cd claude-agent-sdk && rm -rf node_modules package-lock.json && npm install
+   cd ../openai-agents-sdk && rm -rf node_modules package-lock.json && npm install
    ```
 
 5. If `.github/dependabot.yml` has an `ignore` rule for `@slack/bolt`, remove it so Dependabot can manage updates.
