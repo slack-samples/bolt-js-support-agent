@@ -38,5 +38,5 @@ This repo uses a vendored (pre-release) build of `@slack/bolt` from the [bolt-js
 To update the vendored bolt-js to the latest `main`, run the Claude Code slash command:
 
 ```
-/project:update-bolt
+/project:vendor-bolt
 ```
