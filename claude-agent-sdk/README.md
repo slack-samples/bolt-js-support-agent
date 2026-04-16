@@ -1,6 +1,6 @@
-# Casey: IT Helpdesk Agent (Bolt for JavaScript and Claude Agent SDK)
+# Casey: IT Support Agent (Bolt for JavaScript and Claude Agent SDK)
 
-Meet Casey (it/this/that) — an AI-powered IT helpdesk agent that lives in Slack. Casey can troubleshoot common issues, search knowledge base articles, reset passwords, check system status, and create support tickets, all without leaving the conversation.
+Meet Casey (it/this/that) — an AI-powered IT support agent that lives in Slack. Casey can troubleshoot common issues, search knowledge base articles, reset passwords, check system status, and create support tickets, all without leaving the conversation.
 
 Built with [Bolt for JavaScript](https://tools.slack.dev/bolt-js/) and the [Claude Agent SDK](https://platform.claude.com/docs/en/agent-sdk/overview) using models from [Anthropic](https://www.anthropic.com).
 
@@ -304,7 +304,7 @@ The `casey.js` file configures the Claude Agent SDK agent with a system prompt, 
 
 Tools that need Slack API access (emoji reactions, mark resolved) are created as closures inside `runCaseyAgent()` that capture the dependencies. Static tools (knowledge base, tickets, etc.) remain as module-level exports in `agent/tools/`.
 
-The `tools` directory contains five IT helpdesk tools defined using `tool()` from the Claude Agent SDK with Zod v4 schemas.
+The `tools` directory contains five IT support tools defined using `tool()` from the Claude Agent SDK with Zod v4 schemas.
 
 ### `/thread-context`
 

@@ -2,7 +2,7 @@
 
 ## Project Overview
 
-A monorepo containing two parallel implementations of **Casey**, an AI-powered IT helpdesk agent for Slack built with [Bolt for JavaScript](https://github.com/slackapi/bolt-js). Both implementations are functionally identical from the Slack user's perspective but use different AI agent frameworks.
+A monorepo containing two parallel implementations of **Casey**, an AI-powered IT support agent for Slack built with [Bolt for JavaScript](https://github.com/slackapi/bolt-js). Both implementations are functionally identical from the Slack user's perspective but use different AI agent frameworks.
 
 Casey can search a knowledge base, reset passwords, check system status, create tickets, and manage user permissions. When deployed with OAuth, Casey also connects to the [Slack MCP Server](https://docs.slack.dev/agents-ai/model-context-protocol) for searching messages, reading channels, sending messages, and managing canvases. All tool data is hardcoded for demo purposes.
 
