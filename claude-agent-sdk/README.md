@@ -6,11 +6,12 @@ Built with [Bolt for JavaScript](https://tools.slack.dev/bolt-js/) and the [Clau
 
 ## App Overview
 
-Casey gives your team instant IT support through three entry points:
+Casey gives your team instant IT support through four entry points:
 
 * **App Home** — Users open Casey's Home tab and choose from common issue categories (Password Reset, Access Request, Software Help, Network Issues, Something Else). A modal collects details, then Casey starts a DM thread with a resolution.
 * **Direct Messages** — Users message Casey directly to describe any IT issue. Casey responds in-thread, maintaining context across follow-ups.
 * **Channel @mentions** — Users mention `@Casey` in any channel to get help without leaving the conversation.
+* **Assistant Panel** — Users click _Add Agent_ in Slack, select Casey, and pick from suggested prompts or describe an issue.
 
 Casey uses five simulated tools to assist users:
 
@@ -234,13 +235,15 @@ node app-oauth.js
 
 ### Using the App
 
-Once Casey is running, there are three ways to interact:
+Once Casey is running, there are several ways to interact:
 
 **App Home** — Open Casey in Slack and click the _Home_ tab. You'll see five category buttons. Click one to open a modal, describe your issue, and submit. Casey will start a DM thread with you containing a diagnosis and next steps.
 
-**Direct Messages** — Open a DM with Casey and describe your issue. Casey will react with :eyes: while processing, then reply in a thread. Send follow-up messages in the same thread and Casey will maintain the full conversation context.
+**Direct Messages** — Open a DM with Casey. You'll see suggested prompts like _Reset Password_, _Request Access_, and _Network Issues_ — pick one or describe your own issue. Casey will react with :eyes: while processing, then reply in a thread. Send follow-up messages in the same thread and Casey will maintain the full conversation context.
 
-**Channel @mentions** — In any channel where Casey has been added, type `@Casey` followed by your issue. Casey responds in a thread so the channel stays clean.
+**Channel @mentions** — Invite Casey to a channel by typing `/invite @Casey` in the message box, then type `@Casey` followed by your issue. Casey responds in a thread so the channel stays clean.
+
+**Assistant Panel** — Click _Add Agent_ in the top-right corner of Slack, select Casey from the list, then pick a suggested prompt or type a message.
 
 Casey will add a :white_check_mark: reaction when it believes an issue has been resolved, and occasionally adds a contextual emoji reaction to keep things friendly.
 
