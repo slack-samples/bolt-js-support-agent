@@ -51,6 +51,20 @@ describe('buildAppHomeView', () => {
     const hasConnected = mrkdwnTexts.some((t) => t.includes('connected'));
     assert.strictEqual(hasConnected, true);
   });
+
+  it('includes bot mention in context when botUserId is provided', () => {
+    const view = buildAppHomeView(null, false, 'U0BOT');
+    const contextBlock = view.blocks.find((b) => b.type === 'context');
+    const mentionText = contextBlock.elements[0].text;
+    assert.ok(mentionText.includes('<@U0BOT>'));
+  });
+
+  it('omits bot mention when botUserId is not provided', () => {
+    const view = buildAppHomeView();
+    const contextBlock = view.blocks.find((b) => b.type === 'context');
+    const mentionText = contextBlock.elements[0].text;
+    assert.ok(!mentionText.includes('<@'));
+  });
 });
 
 describe('CATEGORIES', () => {

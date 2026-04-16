@@ -35,19 +35,20 @@ export const CATEGORIES = [
 ];
 
 /**
- * Build the App Home view for Casey.
+ * Build the App Home view.
  * @param {string | null} [installUrl] - OAuth install URL shown when MCP is disconnected.
  * @param {boolean} [isConnected] - Whether the Slack MCP Server is connected.
+ * @param {string | null} [botUserId] - The bot's user ID for dynamic mentions.
  * @returns {import('@slack/types').HomeView}
  */
-export function buildAppHomeView(installUrl = null, isConnected = false) {
+export function buildAppHomeView(installUrl = null, isConnected = false, botUserId = null) {
   /** @type {import('@slack/types').KnownBlock[]} */
   const blocks = [
     {
       type: 'header',
       text: {
         type: 'plain_text',
-        text: "Hey there :wave: I'm Casey, your IT helpdesk agent.",
+        text: "Hey there :wave: I'm your IT helpdesk agent.",
       },
     },
     {
@@ -79,7 +80,7 @@ export function buildAppHomeView(installUrl = null, isConnected = false) {
       elements: [
         {
           type: 'mrkdwn',
-          text: 'You can also mention me in any channel with `@Casey` or send me a DM.',
+          text: `You can also mention me in any channel${botUserId ? ` with <@${botUserId}>` : ''} or send me a DM.`,
         },
       ],
     },
@@ -100,7 +101,7 @@ export function buildAppHomeView(installUrl = null, isConnected = false) {
         elements: [
           {
             type: 'mrkdwn',
-            text: 'Casey has access to search messages, read channels, and more.',
+            text: 'This agent has access to search messages, read channels, and more.',
           },
         ],
       },
@@ -119,7 +120,7 @@ export function buildAppHomeView(installUrl = null, isConnected = false) {
         elements: [
           {
             type: 'mrkdwn',
-            text: 'The Slack MCP Server enables Casey to search messages, read channels, and more.',
+            text: 'The Slack MCP Server enables this agent to search messages, read channels, and more.',
           },
         ],
       },
