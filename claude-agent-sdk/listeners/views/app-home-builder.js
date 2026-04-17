@@ -124,6 +124,25 @@ export function buildAppHomeView(installUrl = null, isConnected = false) {
         ],
       },
     );
+  } else {
+    blocks.push(
+      {
+        type: 'section',
+        text: {
+          type: 'mrkdwn',
+          text: '\ud83d\udd34 *Slack MCP Server is disconnected.* <https://github.com/slack-samples/bolt-js-support-agent/blob/main/claude-agent-sdk/README.md#slack-mcp-server|Learn how to enable the Slack MCP Server.>',
+        },
+      },
+      {
+        type: 'context',
+        elements: [
+          {
+            type: 'mrkdwn',
+            text: 'The Slack MCP Server enables Casey to search messages, read channels, and more.',
+          },
+        ],
+      },
+    );
   }
 
   return { type: 'home', blocks };
