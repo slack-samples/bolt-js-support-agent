@@ -31,11 +31,13 @@ describe('buildAppHomeView', () => {
     }
   });
 
-  it('does not show MCP status by default', () => {
+  it('shows disconnected status with learn-more link by default', () => {
     const view = buildAppHomeView();
     const mrkdwnTexts = view.blocks.filter((b) => b.type === 'section').map((b) => b.text.text);
-    const hasMcp = mrkdwnTexts.some((t) => t.includes('MCP Server'));
-    assert.strictEqual(hasMcp, false);
+    const mcpText = mrkdwnTexts.find((t) => t.includes('MCP Server'));
+    assert.ok(mcpText);
+    assert.ok(mcpText.includes('disconnected'));
+    assert.ok(mcpText.includes('Learn how to enable'));
   });
 
   it('shows disconnected status when installUrl is provided', () => {

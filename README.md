@@ -17,11 +17,12 @@ All implementations share the same Slack listener layer, the same five simulated
 
 ## What Casey Can Do
 
-Casey gives your team instant IT support through three entry points:
+Casey gives your team instant IT support through four entry points:
 
 * **App Home** — Choose from common issue categories. A modal collects details, then Casey starts a DM thread with a resolution.
 * **Direct Messages** — Describe any IT issue and Casey responds in-thread, maintaining context across follow-ups.
 * **Channel @mentions** — Mention `@Casey` in any channel to get help without leaving the conversation.
+* **Assistant Panel** — Users click _Add Agent_ in Slack, select Casey, and pick from suggested prompts or describe an issue.
 
 Behind the scenes, Casey has access to five simulated tools: knowledge base search, support ticket creation, password reset, system status checks, and user permissions lookup.
 
@@ -30,6 +31,17 @@ Behind the scenes, Casey has access to five simulated tools: knowledge base sear
 ### Slack MCP Server
 
 Casey also works with the [Slack MCP Server](https://docs.slack.dev/agents-ai/model-context-protocol), giving it the ability to search messages and files, read channel history and threads, send messages, schedule messages, and create or update Slack canvases. When deployed with OAuth (HTTP mode), Casey automatically connects to the Slack MCP Server using the user's token, unlocking these capabilities on top of the built-in IT tools.
+
+## Using the App
+
+Once Casey is running, there are several ways to interact:
+
+* **App Home** — Open Casey in Slack and click the _Home_ tab. Choose from common issue categories, describe your issue in the modal, and Casey starts a DM thread with a resolution.
+* **Direct Messages** — Open a DM with Casey. Pick a suggested prompt or describe your issue, and Casey will reply in a thread.
+* **Channel @mentions** — Invite Casey to a channel by typing `/invite @Casey`, then type `@Casey` followed by your issue. Casey responds in a thread so the channel stays clean.
+* **Assistant Panel** — Click _Add Agent_ in the top-right corner of Slack, select Casey, and choose a suggested prompt like _Reset Password_, _Request Access_, or _Network Issues_.
+
+For full setup instructions, pick a framework above and follow the README in that directory.
 
 ## Local Development
 
