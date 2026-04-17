@@ -139,7 +139,7 @@ export function buildAppHomeView(installUrl = null, isConnected = false, botUser
         elements: [
           {
             type: 'mrkdwn',
-            text: 'The Slack MCP Server enables Casey to search messages, read channels, and more.',
+            text: 'The Slack MCP Server enables this agent to search messages, read channels, and more.',
           },
         ],
       },
