@@ -1,6 +1,6 @@
-# Casey: IT Helpdesk Agent
+# Casey: IT Support Agent
 
-Meet Casey (it/this/that) — an AI-powered IT helpdesk agent that lives in Slack. Casey can troubleshoot common issues, search knowledge base articles, reset passwords, check system status, and create support tickets, all without leaving the conversation.
+Meet Casey (it/this/that) — an AI-powered IT support agent that lives in Slack. Casey can troubleshoot common issues, search knowledge base articles, reset passwords, check system status, and create support tickets, all without leaving the conversation.
 
 Built with [Bolt for JavaScript](https://tools.slack.dev/bolt-js/).
 

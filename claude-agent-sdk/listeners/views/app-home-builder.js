@@ -48,7 +48,7 @@ export function buildAppHomeView(installUrl = null, isConnected = false, botUser
       type: 'header',
       text: {
         type: 'plain_text',
-        text: "Hey there :wave: I'm your IT helpdesk agent.",
+        text: "Hey there :wave: I'm your IT support agent.",
       },
     },
     {
