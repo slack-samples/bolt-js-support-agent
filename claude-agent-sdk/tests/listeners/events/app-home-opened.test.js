@@ -10,7 +10,7 @@ describe('handleAppHomeOpened', () => {
 
   beforeEach(() => {
     fakeClient = { views: { publish: mock.fn(async () => ({ ok: true })) } };
-    fakeContext = { userId: 'U123' };
+    fakeContext = { userId: 'U123', botUserId: 'U0BOT' };
     fakeLogger = { error: mock.fn() };
   });
 
