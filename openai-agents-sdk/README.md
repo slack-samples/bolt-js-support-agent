@@ -1,6 +1,6 @@
-# Casey: IT Helpdesk Agent (Bolt for JavaScript and OpenAI Agents SDK)
+# Casey: IT Support Agent (Bolt for JavaScript and OpenAI Agents SDK)
 
-Meet Casey (it/this/that) — an AI-powered IT helpdesk agent that lives in Slack. Casey can troubleshoot common issues, search knowledge base articles, reset passwords, check system status, and create support tickets, all without leaving the conversation.
+Meet Casey (it/this/that) — an AI-powered IT support agent that lives in Slack. Casey can troubleshoot common issues, search knowledge base articles, reset passwords, check system status, and create support tickets, all without leaving the conversation.
 
 Built with [Bolt for JavaScript](https://tools.slack.dev/bolt-js/) and [OpenAI Agents SDK](https://openai.github.io/openai-agents-js/) using models from [OpenAI](https://openai.com).
 
@@ -307,7 +307,7 @@ The `support-agent.js` file defines the OpenAI Agents SDK Agent with a system pr
 
 The `deps.js` file defines the `CaseyDeps` class passed to the agent at runtime, providing access to the Slack client and conversation context.
 
-The `tools` directory contains five IT helpdesk tools defined using `tool()` from `@openai/agents`. Tools return plain strings.
+The `tools` directory contains five IT support tools defined using `tool()` from `@openai/agents`. Tools return plain strings.
 
 ### `/thread-context`
 
