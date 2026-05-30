@@ -14,7 +14,7 @@
     },
     "bot_user": {
       "display_name": "Casey - Claude SDK (JavaScript)",
-      "always_online": false
+      "always_online": true
     }
   },
   "oauth_config": {
