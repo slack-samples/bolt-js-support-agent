@@ -3,8 +3,8 @@
     "name": "Casey - Claude SDK"
   },
   "features": {
-    "assistant_view": {
-      "assistant_description": "Hi, I am an agent built using Bolt for JavaScript. I am here to help you out!",
+    "agent_view": {
+      "agent_description": "Hi, I am an agent built using Bolt for JavaScript. I am here to help you out!",
       "suggested_prompts": []
     },
     "app_home": {
@@ -57,14 +57,7 @@
   "settings": {
     "event_subscriptions": {
       "request_url": "https://ngrok-free.app/slack/events",
-      "bot_events": [
-        "app_home_opened",
-        "app_mention",
-        "assistant_thread_started",
-        "message.channels",
-        "message.groups",
-        "message.im"
-      ]
+      "bot_events": ["app_home_opened", "app_mention", "message.channels", "message.groups", "message.im"]
     },
     "interactivity": {
       "is_enabled": true,
