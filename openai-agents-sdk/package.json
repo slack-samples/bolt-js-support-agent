@@ -11,7 +11,7 @@
     "test": "node --test"
   },
   "dependencies": {
-    "@openai/agents": "^0.13.1",
+    "@openai/agents": "^0.13.4",
     "@slack/bolt": "^4.7.3",
     "dotenv": "~17.4.2"
   },
