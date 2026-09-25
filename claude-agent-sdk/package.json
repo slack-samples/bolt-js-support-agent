@@ -11,7 +11,7 @@
     "test": "node --test"
   },
   "dependencies": {
-    "@anthropic-ai/claude-agent-sdk": "^0.3.272",
+    "@anthropic-ai/claude-agent-sdk": "^0.3.278",
     "@slack/bolt": "^5.1.0",
     "dotenv": "~17.4.2",
     "zod": "^4.6.5"
