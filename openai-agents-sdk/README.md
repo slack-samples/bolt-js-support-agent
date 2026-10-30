@@ -8,18 +8,18 @@ Built with [Bolt for JavaScript](https://tools.slack.dev/bolt-js/) and [OpenAI A
 
 Casey gives your team instant IT support through four entry points:
 
-* **App Home** — Users open Casey's Home tab and choose from common issue categories (Password Reset, Access Request, Software Help, Network Issues, Something Else). A modal collects details, then Casey starts a DM thread with a resolution.
-* **Direct Messages** — Users message Casey directly to describe any IT issue. Casey responds in-thread, maintaining context across follow-ups.
-* **Channel @mentions** — Users mention `@Casey` in any channel to get help without leaving the conversation.
-* **Assistant Panel** — Users click _Add Agent_ in Slack, select Casey, and pick from suggested prompts or describe an issue.
+- **App Home** — Users open Casey's Home tab and choose from common issue categories (Password Reset, Access Request, Software Help, Network Issues, Something Else). A modal collects details, then Casey starts a DM thread with a resolution.
+- **Direct Messages** — Users message Casey directly to describe any IT issue. Casey responds in-thread, maintaining context across follow-ups.
+- **Channel @mentions** — Users mention `@Casey` in any channel to get help without leaving the conversation.
+- **Assistant Panel** — Users click _Add Agent_ in Slack, select Casey, and pick from suggested prompts or describe an issue.
 
 Casey uses five simulated tools to assist users:
 
-* **Knowledge Base Search** — Finds relevant articles for common topics like VPN, email, Wi-Fi, printers, and more.
-* **Support Ticket Creation** — Creates a tracked ticket when issues need human follow-up.
-* **Password Reset** — Triggers a password reset and confirms the action.
-* **System Status Check** — Reports the operational status of company systems.
-* **User Permissions Lookup** — Shows access levels and group memberships.
+- **Knowledge Base Search** — Finds relevant articles for common topics like VPN, email, Wi-Fi, printers, and more.
+- **Support Ticket Creation** — Creates a tracked ticket when issues need human follow-up.
+- **Password Reset** — Triggers a password reset and confirms the action.
+- **System Status Check** — Reports the operational status of company systems.
+- **User Permissions Lookup** — Shows access levels and group memberships.
 
 > **Note:** All tools return simulated data for demonstration purposes. In a production app, these would connect to your actual IT systems.
 
@@ -81,8 +81,8 @@ npx skills add slackapi/slack-skills-plugin -y -a opencode
 
 Install the latest version of the Slack CLI for your operating system:
 
-* [Slack CLI for macOS & Linux](https://docs.slack.dev/tools/slack-cli/guides/installing-the-slack-cli-for-mac-and-linux/)
-* [Slack CLI for Windows](https://docs.slack.dev/tools/slack-cli/guides/installing-the-slack-cli-for-windows/)
+- [Slack CLI for macOS & Linux](https://docs.slack.dev/tools/slack-cli/guides/installing-the-slack-cli-for-mac-and-linux/)
+- [Slack CLI for Windows](https://docs.slack.dev/tools/slack-cli/guides/installing-the-slack-cli-for-windows/)
 
 You'll also need to log in if this is your first time using the Slack CLI.
 
@@ -319,21 +319,21 @@ Every incoming request is routed to a "listener". This directory groups each lis
 
 **`/listeners/events`** — Handles incoming events:
 
-* `app-home-opened.js` — Publishes the App Home view with category buttons, or pins suggested prompts to the agent DM Messages tab (branches on `event.tab`).
-* `app-mentioned.js` — Responds to `@Casey` mentions in channels.
-* `message.js` — Responds to direct messages from users.
+- `app-home-opened.js` — Publishes the App Home view with category buttons, or pins suggested prompts to the agent DM Messages tab (branches on `event.tab`).
+- `app-mentioned.js` — Responds to `@Casey` mentions in channels.
+- `message.js` — Responds to direct messages from users.
 
 **`/listeners/actions`** — Handles interactive components:
 
-* `issue-buttons.js` — Opens the issue submission modal when a category button is clicked.
-* `feedback-buttons.js` — Handles thumbs up/down feedback on Casey's responses.
+- `issue-buttons.js` — Opens the issue submission modal when a category button is clicked.
+- `feedback-buttons.js` — Handles thumbs up/down feedback on Casey's responses.
 
 **`/listeners/views`** — Handles view submissions and builds Block Kit views:
 
-* `issue-modal.js` — Processes modal submissions, starts a DM thread, and runs the agent.
-* `app-home-builder.js` — Constructs the App Home Block Kit view.
-* `issue-modal-builder.js` — Constructs the issue submission modal.
-* `feedback-builder.js` — Creates the feedback button block attached to responses.
+- `issue-modal.js` — Processes modal submissions, starts a DM thread, and runs the agent.
+- `app-home-builder.js` — Constructs the App Home Block Kit view.
+- `issue-modal-builder.js` — Constructs the issue submission modal.
+- `feedback-builder.js` — Creates the feedback button block attached to responses.
 
 ### `/agent`
 
