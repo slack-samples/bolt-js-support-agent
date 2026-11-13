@@ -16,7 +16,7 @@
     "dotenv": "~18.0.10"
   },
   "devDependencies": {
-    "@biomejs/biome": "^2.6.4",
+    "@biomejs/biome": "^2.6.6",
     "@slack/cli-hooks": "^2.0.0",
     "typescript": "^7.0.2"
   }
