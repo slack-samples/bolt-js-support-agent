@@ -45,6 +45,8 @@ export async function handleMessage({ client, context, event, logger, say, saySt
   if (isDm) {
     // DMs are always handled
   } else if (isThreadReply) {
+    if (event.text?.includes(`<@${context.botUserId}>`)) return;
+
     // Channel thread replies are handled only if the bot is already engaged
     const session = sessionStore.getSession(event.channel, /** @type {string} */ (event.thread_ts));
     if (session === null) return;
