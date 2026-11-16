@@ -46,4 +46,16 @@ describe('handleMessage', () => {
     await handleMessage({ ...args, event });
     assert.strictEqual(args.setStatus.mock.callCount(), 0);
   });
+
+  it('handles a DM that mentions the agent, since app_mention skips DMs', async () => {
+    const event = {
+      channel: 'D123',
+      channel_type: 'im',
+      text: '<@UBOT> help',
+      ts: '3.0',
+      user: 'U123',
+    };
+    await handleMessage({ ...args, client: { reactions: { add: mock.fn(async () => {}) } }, event });
+    assert.strictEqual(args.setStatus.mock.callCount(), 1);
+  });
 });
