@@ -33,4 +33,4 @@ jobs:
           npm run check
       - name: Lint the root
         working-directory: .
-        run: npx --prefix ${{ matrix.directory }} biome check .
+        run: npx --prefix ${{ matrix.directory }} @biomejs/biome check .
