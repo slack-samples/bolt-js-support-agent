@@ -11,6 +11,15 @@ function isGenericMessageEvent(event) {
 }
 
 /**
+ * @param {import('@slack/types').GenericMessageEvent} event
+ * @param {string | undefined} botUserId
+ * @returns {boolean}
+ */
+function isAppMention(event, botUserId) {
+  return event.text?.includes(`<@${botUserId}>`) ?? false;
+}
+
+/**
  * @typedef {{ event_type: 'issue_submission', event_payload: { user_id: string } }} IssueSubmissionMetadata
  */
 
@@ -45,7 +54,7 @@ export async function handleMessage({ client, context, event, logger, say, saySt
   if (isDm) {
     // DMs are always handled
   } else if (isThreadReply) {
-    if (event.text?.includes(`<@${context.botUserId}>`)) return;
+    if (isAppMention(event, context.botUserId)) return;
 
     // Channel thread replies are handled only if the bot is already engaged
     const history = conversationStore.getHistory(
