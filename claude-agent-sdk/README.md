@@ -348,7 +348,7 @@ The `tools` directory contains five IT support tools defined using `tool()` from
 
 ### `/thread-context`
 
-The `store.js` file implements an in-memory session ID store, keyed by channel, thread, and user, so each person in a thread has their own conversation. The Claude Agent SDK manages conversation history server-side via sessions, so only session IDs need to be tracked locally for resuming conversations. The store has TTL-based cleanup (1 hour) and a max entry limit (1000).
+The `store.js` file implements an in-memory session ID store, keyed by channel, thread, and user, so each person in a thread has their own conversation. The Claude Agent SDK manages conversation history server-side via sessions, so only session IDs need to be tracked locally for resuming conversations. The store has TTL-based cleanup (24 hours) and a max entry limit (1000).
 
 ## Troubleshooting
 

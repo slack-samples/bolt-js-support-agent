@@ -348,7 +348,7 @@ The `tools` directory contains five IT support tools defined using `tool()` from
 
 ### `/thread-context`
 
-The `store.js` file implements an in-memory conversation history store, keyed by channel, thread, and user, so each person in a thread has their own conversation. This enables multi-turn conversations where Casey remembers previous context within a thread. The store has TTL-based cleanup (1 hour) and a max entry limit (1000).
+The `store.js` file implements an in-memory conversation history store, keyed by channel, thread, and user, so each person in a thread has their own conversation. This enables multi-turn conversations where Casey remembers previous context within a thread. The store has TTL-based cleanup (24 hours) and a max entry limit (1000).
 
 ## Troubleshooting
 
