@@ -11,6 +11,8 @@ A monorepo with two functionally identical implementations of Casey, an IT suppo
 
 Work and run commands inside one of them. Keep the two in parity: a user-facing change to one usually belongs in the other.
 
+The root `biome.json` lints the files at the root, like this one and the README, and skips both directories. Run `claude-agent-sdk/node_modules/.bin/biome check .` from the root after installing `claude-agent-sdk/`. CI runs the same in `.github/workflows/lint.yml`.
+
 ## Slack Plugin
 
 To install the Slack plugin for your coding agent, follow [Claude Code, Codex, Cursor, and Other Coding Agents](./README.md#claude-code-codex-cursor-and-other-coding-agents) in the README.
