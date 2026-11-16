@@ -71,4 +71,21 @@ describe('handleMessage', () => {
     await handleMessage({ ...args, context: { ...args.context, userId: 'U456' }, event });
     assert.strictEqual(args.setStatus.mock.callCount(), 0);
   });
+
+  it('looks up an issue submission session under the submitter', async () => {
+    const lookup = mock.method(sessionStore, 'getSession', () => {
+      throw new Error('stop before running the agent');
+    });
+    const event = {
+      bot_id: 'B123',
+      channel: 'D123',
+      channel_type: 'im',
+      metadata: { event_type: 'issue_submission', event_payload: { user_id: 'U789' } },
+      text: '*Category:* Hardware',
+      ts: '5.0',
+    };
+    await handleMessage({ ...args, context: { ...args.context, userId: 'UBOT' }, event });
+    assert.deepStrictEqual(lookup.mock.calls[0].arguments, ['D123', '5.0', 'U789']);
+    mock.restoreAll();
+  });
 });

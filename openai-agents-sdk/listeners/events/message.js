@@ -56,13 +56,13 @@ export async function handleMessage({ client, context, event, logger, say, saySt
   } else if (isThreadReply) {
     if (isAppMention(event, context.botUserId)) return;
 
-    // Channel thread replies are handled only if the bot is already engaged
-    const history = conversationStore.getHistory(
-      event.channel,
-      /** @type {string} */ (event.thread_ts),
-      /** @type {string} */ (context.userId),
-    );
-    if (history === null) return;
+    const hasOwnHistory =
+      conversationStore.getHistory(
+        event.channel,
+        /** @type {string} */ (event.thread_ts),
+        /** @type {string} */ (context.userId),
+      ) !== null;
+    if (!hasOwnHistory) return;
   } else {
     // Top-level channel messages are handled by app_mentioned
     return;
