@@ -8,7 +8,7 @@ describe('handleMessage', () => {
   let args;
 
   beforeEach(() => {
-    conversationStore.setHistory('C123', '1.0', []);
+    conversationStore.setHistory('C123', '1.0', 'U123', []);
     args = {
       client: {},
       context: { botUserId: 'UBOT', userId: 'U123' },
@@ -44,6 +44,19 @@ describe('handleMessage', () => {
       user: 'U123',
     };
     await handleMessage({ ...args, event });
+    assert.strictEqual(args.setStatus.mock.callCount(), 0);
+  });
+
+  it('skips a thread reply from someone without their own session in the thread', async () => {
+    const event = {
+      channel: 'C123',
+      channel_type: 'channel',
+      text: 'what did you find?',
+      thread_ts: '1.0',
+      ts: '2.0',
+      user: 'U456',
+    };
+    await handleMessage({ ...args, context: { ...args.context, userId: 'U456' }, event });
     assert.strictEqual(args.setStatus.mock.callCount(), 0);
   });
 });

@@ -279,7 +279,7 @@ Once Casey is running, there are several ways to interact:
 
 **Direct Messages** — Open a DM with Casey. You'll see suggested prompts like _Reset Password_, _Request Access_, and _Network Issues_ — pick one or describe your own issue. Casey will react with :eyes: while processing, then reply in a thread. Send follow-up messages in the same thread and Casey will maintain the full conversation context.
 
-**Channel @mentions** — Invite Casey to a channel by typing `/invite @Casey` in the message box, then type `@Casey` followed by your issue. Casey responds in a thread so the channel stays clean.
+**Channel @mentions** — Invite Casey to a channel by typing `/invite @Casey` in the message box, then type `@Casey` followed by your issue. Casey responds in a thread so the channel stays clean. In that thread, Casey replies to follow-up messages from the person who mentioned it. Anyone else in the thread can mention `@Casey` to start their own conversation and Casey keeps each person's conversation separate.
 
 **Assistant Panel** — Click _Add Agent_ in the top-right corner of Slack, select Casey from the list, then pick a suggested prompt or type a message.
 
@@ -348,7 +348,7 @@ The `tools` directory contains five IT support tools defined using `tool()` from
 
 ### `/thread-context`
 
-The `store.js` file implements an in-memory session ID store, keyed by channel and thread. The Claude Agent SDK manages conversation history server-side via sessions, so only session IDs need to be tracked locally for resuming conversations. The store has TTL-based cleanup (1 hour) and a max entry limit (1000).
+The `store.js` file implements an in-memory session ID store, keyed by channel, thread, and user, so each person in a thread has their own conversation. The Claude Agent SDK manages conversation history server-side via sessions, so only session IDs need to be tracked locally for resuming conversations. The store has TTL-based cleanup (1 hour) and a max entry limit (1000).
 
 ## Troubleshooting
 

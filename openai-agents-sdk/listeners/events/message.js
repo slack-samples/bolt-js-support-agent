@@ -48,7 +48,11 @@ export async function handleMessage({ client, context, event, logger, say, saySt
     if (event.text?.includes(`<@${context.botUserId}>`)) return;
 
     // Channel thread replies are handled only if the bot is already engaged
-    const history = conversationStore.getHistory(event.channel, /** @type {string} */ (event.thread_ts));
+    const history = conversationStore.getHistory(
+      event.channel,
+      /** @type {string} */ (event.thread_ts),
+      /** @type {string} */ (context.userId),
+    );
     if (history === null) return;
   } else {
     // Top-level channel messages are handled by app_mentioned
@@ -65,7 +69,7 @@ export async function handleMessage({ client, context, event, logger, say, saySt
     const userId = issueMetadata ? issueMetadata.event_payload.user_id : /** @type {string} */ (context.userId);
 
     // Get conversation history
-    const history = conversationStore.getHistory(channelId, threadTs);
+    const history = conversationStore.getHistory(channelId, threadTs, userId);
 
     // Add eyes reaction only to the first message (DMs only — channel
     // threads already have the reaction from the initial app_mention)
@@ -103,7 +107,7 @@ export async function handleMessage({ client, context, event, logger, say, saySt
     await streamer.stop({ blocks: feedbackBlocks });
 
     // Store conversation history
-    conversationStore.setHistory(channelId, threadTs, result.history);
+    conversationStore.setHistory(channelId, threadTs, userId, result.history);
   } catch (e) {
     logger.error(`Failed to handle message: ${e}`);
     await say({
