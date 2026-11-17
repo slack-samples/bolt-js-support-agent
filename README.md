@@ -81,7 +81,7 @@ Once Casey is running, there are several ways to interact:
 
 - **App Home** — Open Casey in Slack and click the _Home_ tab. Choose from common issue categories, describe your issue in the modal, and Casey starts a DM thread with a resolution.
 - **Direct Messages** — Open a DM with Casey. Pick a suggested prompt or describe your issue, and Casey will reply in a thread.
-- **Channel @mentions** — Invite Casey to a channel by typing `/invite @Casey`, then type `@Casey` followed by your issue. Casey responds in a thread so the channel stays clean.
+- **Channel @mentions** — Invite Casey to a channel by typing `/invite @Casey`, then type `@Casey` followed by your issue. Casey responds in a thread so the channel stays clean. Casey replies to follow-ups from the person who mentioned it and anyone else can mention `@Casey` to start their own conversation.
 - **Assistant Panel** — Click _Add Agent_ in the top-right corner of Slack, select Casey, and choose a suggested prompt like _Reset Password_, _Request Access_, or _Network Issues_.
 
 For full setup instructions, pick a framework above and follow the README in that directory.

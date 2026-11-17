@@ -56,9 +56,13 @@ export async function handleMessage({ client, context, event, logger, say, saySt
   } else if (isThreadReply) {
     if (isAppMention(event, context.botUserId)) return;
 
-    // Channel thread replies are handled only if the bot is already engaged
-    const session = sessionStore.getSession(event.channel, /** @type {string} */ (event.thread_ts));
-    if (session === null) return;
+    const hasOwnSession =
+      sessionStore.getSession(
+        event.channel,
+        /** @type {string} */ (event.thread_ts),
+        /** @type {string} */ (context.userId),
+      ) !== null;
+    if (!hasOwnSession) return;
   } else {
     // Top-level channel messages are handled by app_mentioned
     return;
@@ -73,7 +77,7 @@ export async function handleMessage({ client, context, event, logger, say, saySt
     // user_id comes from the metadata rather than the event context.
     const userId = /** @type {string} */ (issueMetadata ? issueMetadata.event_payload.user_id : context.userId);
 
-    const existingSessionId = sessionStore.getSession(channelId, threadTs);
+    const existingSessionId = sessionStore.getSession(channelId, threadTs, userId);
 
     // Add eyes reaction only to the first message (DMs only — channel
     // threads already have the reaction from the initial app_mention)
@@ -109,7 +113,7 @@ export async function handleMessage({ client, context, event, logger, say, saySt
 
     // Store conversation session
     if (newSessionId) {
-      sessionStore.setSession(channelId, threadTs, newSessionId);
+      sessionStore.setSession(channelId, threadTs, userId, newSessionId);
     }
   } catch (e) {
     logger.error(`Failed to handle message: ${e}`);

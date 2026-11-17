@@ -24,10 +24,11 @@ export class ConversationStore {
   /**
    * @param {string} channelId
    * @param {string} threadTs
+   * @param {string} userId
    * @returns {import('@openai/agents').AgentInputItem[] | null}
    */
-  getHistory(channelId, threadTs) {
-    const key = `${channelId}:${threadTs}`;
+  getHistory(channelId, threadTs, userId) {
+    const key = `${channelId}:${threadTs}:${userId}`;
     const entry = this._store.get(key);
     if (!entry) return null;
     if (Date.now() - entry.timestamp > this._ttlSeconds * 1000) {
@@ -40,11 +41,12 @@ export class ConversationStore {
   /**
    * @param {string} channelId
    * @param {string} threadTs
+   * @param {string} userId
    * @param {import('@openai/agents').AgentInputItem[]} messages
    * @returns {void}
    */
-  setHistory(channelId, threadTs, messages) {
-    const key = `${channelId}:${threadTs}`;
+  setHistory(channelId, threadTs, userId, messages) {
+    const key = `${channelId}:${threadTs}:${userId}`;
     this._store.set(key, {
       messages,
       timestamp: Date.now(),

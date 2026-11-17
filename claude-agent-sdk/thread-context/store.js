@@ -24,10 +24,11 @@ export class SessionStore {
   /**
    * @param {string} channelId
    * @param {string} threadTs
+   * @param {string} userId
    * @returns {string | null}
    */
-  getSession(channelId, threadTs) {
-    const key = `${channelId}:${threadTs}`;
+  getSession(channelId, threadTs, userId) {
+    const key = `${channelId}:${threadTs}:${userId}`;
     const entry = this._store.get(key);
     if (!entry) return null;
     if (Date.now() - entry.timestamp > this._ttlSeconds * 1000) {
@@ -40,11 +41,12 @@ export class SessionStore {
   /**
    * @param {string} channelId
    * @param {string} threadTs
+   * @param {string} userId
    * @param {string} sessionId
    * @returns {void}
    */
-  setSession(channelId, threadTs, sessionId) {
-    const key = `${channelId}:${threadTs}`;
+  setSession(channelId, threadTs, userId, sessionId) {
+    const key = `${channelId}:${threadTs}:${userId}`;
     this._store.set(key, {
       sessionId,
       timestamp: Date.now(),
