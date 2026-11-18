@@ -1,0 +1,28 @@
+{
+  "name": "bolt-js-support-agent-vercel",
+  "version": "0.1.0",
+  "type": "module",
+  "license": "MIT",
+  "scripts": {
+    "check": "npx tsc --checkJs --noEmit --skipLibCheck --esModuleInterop --target esnext --module nodenext --moduleResolution nodenext app.js app-vercel.js api/slack/*.js",
+    "start": "node app.js",
+    "lint": "npx @biomejs/biome check .",
+    "lint:fix": "npx @biomejs/biome check --write .",
+    "test": "node --test"
+  },
+  "dependencies": {
+    "@ai-sdk/mcp": "^2.0.99",
+    "@slack/bolt": "^5.1.0",
+    "@vercel/blob": "^2.9.0",
+    "@vercel/functions": "^3.11.3",
+    "@vercel/slack-bolt": "^1.7.5",
+    "ai": "^7.0.173",
+    "dotenv": "~18.0.10",
+    "zod": "^4.6.7"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "^2.6.6",
+    "@slack/cli-hooks": "^2.0.0",
+    "typescript": "^7.0.2"
+  }
+}

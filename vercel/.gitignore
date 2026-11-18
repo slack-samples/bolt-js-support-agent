@@ -1,0 +1,18 @@
+# Claude Code
+.claude/*.local.json
+
+# Environment
+.env*
+!.env.sample
+
+# Logs
+logs/
+
+# macOS
+.DS_Store
+
+# Node.js
+node_modules/
+
+# Vercel
+.vercel/
