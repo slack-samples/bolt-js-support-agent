@@ -21,13 +21,14 @@ Update the vendored bolt-js tarball to the latest commit on the `main` branch.
    cp slack-bolt-*.tgz ../vendor/
    ```
 
-4. Update the tarball filename in `package.json` for both apps (`claude-agent-sdk/package.json`, `openai-agents-sdk/package.json`). Replace the existing `"@slack/bolt": "file:../vendor/slack-bolt-*.tgz"` value with the new filename.
+4. Update the tarball filename in `package.json` for all apps (`claude-agent-sdk/package.json`, `openai-agents-sdk/package.json`, `vercel/package.json`). Replace the existing `"@slack/bolt": "file:../vendor/slack-bolt-*.tgz"` value with the new filename.
 
-5. Regenerate `package-lock.json` in both app directories by removing the old lock file and `node_modules`, then running a fresh install:
+5. Regenerate `package-lock.json` in every app directory by removing the old lock file and `node_modules`, then running a fresh install:
 
    ```
    cd ../claude-agent-sdk && rm -rf node_modules package-lock.json && npm install
    cd ../openai-agents-sdk && rm -rf node_modules package-lock.json && npm install
+   cd ../vercel && rm -rf node_modules package-lock.json && npm install
    ```
 
 6. Clean up the build directory:

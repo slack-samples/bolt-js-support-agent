@@ -15,6 +15,7 @@ jobs:
         directory:
           - openai-agents-sdk
           - claude-agent-sdk
+          - vercel
     defaults:
       run:
         working-directory: ${{ matrix.directory }}

@@ -6,14 +6,15 @@ Built with [Bolt for JavaScript](https://tools.slack.dev/bolt-js/).
 
 ## Choose Your Framework
 
-This repo contains the same app built with two different AI agent frameworks. Pick the one that fits your stack:
+This repo contains the same app built with three different AI agent frameworks. Pick the one that fits your stack:
 
 | App                   | Directory            | Get Started                                  | Framework                                                                  |
 | --------------------- | -------------------- | -------------------------------------------- | -------------------------------------------------------------------------- |
 | **Claude Agent SDK**  | `claude-agent-sdk/`  | [View README](./claude-agent-sdk/README.md)  | [claude-agent-sdk](https://platform.claude.com/docs/en/agent-sdk/overview) |
 | **OpenAI Agents SDK** | `openai-agents-sdk/` | [View README](./openai-agents-sdk/README.md) | [openai-agents](https://openai.github.io/openai-agents-js/)                |
+| **Vercel AI SDK**     | `vercel/`            | [View README](./vercel/README.md)            | [AI SDK](https://ai-sdk.dev/)                                              |
 
-All implementations share the same Slack listener layer, the same five simulated IT tools, and the same user experience. The only difference is how the agent is defined and executed under the hood.
+All implementations share the same Slack listener layer, the same five simulated IT tools, and the same user experience. The only difference is how the agent is defined and executed under the hood, except that `vercel/` also deploys to Vercel Functions and keeps installations and conversation history in Vercel storage.
 
 ## Claude Code, Codex, Cursor, and Other Coding Agents
 
