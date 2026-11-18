@@ -10,7 +10,7 @@ describe('handleAppMentioned', () => {
   });
 
   it('looks up a separate session for a second person who mentions the agent in a thread', async () => {
-    conversationStore.setHistory('C123', '1.0', 'U123', [{ role: 'user', content: 'first' }]);
+    await conversationStore.setHistory('C123', '1.0', 'U123', [{ role: 'user', content: 'first' }]);
     const lookup = mock.method(conversationStore, 'getHistory', () => {
       throw new Error('stop before running the agent');
     });
@@ -25,6 +25,8 @@ describe('handleAppMentioned', () => {
     });
     assert.deepStrictEqual(lookup.mock.calls[0].arguments, ['C123', '1.0', 'U456']);
     mock.restoreAll();
-    assert.deepStrictEqual(conversationStore.getHistory('C123', '1.0', 'U123'), [{ role: 'user', content: 'first' }]);
+    assert.deepStrictEqual(await conversationStore.getHistory('C123', '1.0', 'U123'), [
+      { role: 'user', content: 'first' },
+    ]);
   });
 });

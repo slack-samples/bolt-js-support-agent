@@ -7,8 +7,8 @@ import { conversationStore } from '../../../thread-context/index.js';
 describe('handleMessage', () => {
   let args;
 
-  beforeEach(() => {
-    conversationStore.setHistory('C123', '1.0', 'U123', []);
+  beforeEach(async () => {
+    await conversationStore.setHistory('C123', '1.0', 'U123', []);
     args = {
       client: {},
       context: { botUserId: 'UBOT', userId: 'U123' },

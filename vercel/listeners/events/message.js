@@ -57,11 +57,11 @@ export async function handleMessage({ client, context, event, logger, say, saySt
     if (isAppMention(event, context.botUserId)) return;
 
     const hasOwnHistory =
-      conversationStore.getHistory(
+      (await conversationStore.getHistory(
         event.channel,
         /** @type {string} */ (event.thread_ts),
         /** @type {string} */ (context.userId),
-      ) !== null;
+      )) !== null;
     if (!hasOwnHistory) return;
   } else {
     // Top-level channel messages are handled by app_mentioned
@@ -78,7 +78,7 @@ export async function handleMessage({ client, context, event, logger, say, saySt
     const userId = issueMetadata ? issueMetadata.event_payload.user_id : /** @type {string} */ (context.userId);
 
     // Get conversation history
-    const history = conversationStore.getHistory(channelId, threadTs, userId);
+    const history = await conversationStore.getHistory(channelId, threadTs, userId);
 
     // Add eyes reaction only to the first message (DMs only — channel
     // threads already have the reaction from the initial app_mention)
@@ -103,20 +103,20 @@ export async function handleMessage({ client, context, event, logger, say, saySt
     });
 
     // Run the agent
-    /** @type {string | import('@openai/agents').AgentInputItem[]} */
-    const inputItems = history ? [...history, { role: 'user', content: text }] : text;
+    /** @type {import('ai').ModelMessage[]} */
+    const messages = history ? [...history, { role: 'user', content: text }] : [{ role: 'user', content: text }];
 
     const deps = new CaseyDeps(client, userId, channelId, threadTs, event.ts, context.userToken);
-    const result = await runCasey(inputItems, deps);
+    const result = await runCasey(messages, deps);
 
     // Stream response in thread with feedback buttons
     const streamer = sayStream();
-    await streamer.append({ markdown_text: result.finalOutput });
+    await streamer.append({ markdown_text: result.text });
     const feedbackBlocks = buildFeedbackBlocks();
     await streamer.stop({ blocks: feedbackBlocks });
 
     // Store conversation history
-    conversationStore.setHistory(channelId, threadTs, userId, result.history);
+    await conversationStore.setHistory(channelId, threadTs, userId, result.messages);
   } catch (e) {
     logger.error(`Failed to handle message: ${e}`);
     await say({

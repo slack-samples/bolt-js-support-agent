@@ -47,22 +47,24 @@ export async function handleAppMentioned({ client, context, event, logger, say, 
     });
 
     // Get conversation history
-    const history = conversationStore.getHistory(channelId, threadTs, userId);
-    /** @type {string | import('@openai/agents').AgentInputItem[]} */
-    const inputItems = history ? [...history, { role: 'user', content: cleanedText }] : cleanedText;
+    const history = await conversationStore.getHistory(channelId, threadTs, userId);
+    /** @type {import('ai').ModelMessage[]} */
+    const messages = history
+      ? [...history, { role: 'user', content: cleanedText }]
+      : [{ role: 'user', content: cleanedText }];
 
     // Run the agent
     const deps = new CaseyDeps(client, userId, channelId, threadTs, event.ts, context.userToken);
-    const result = await runCasey(inputItems, deps);
+    const result = await runCasey(messages, deps);
 
     // Stream response in thread with feedback buttons
     const streamer = sayStream();
-    await streamer.append({ markdown_text: result.finalOutput });
+    await streamer.append({ markdown_text: result.text });
     const feedbackBlocks = buildFeedbackBlocks();
     await streamer.stop({ blocks: feedbackBlocks });
 
     // Store conversation history
-    conversationStore.setHistory(channelId, threadTs, userId, result.history);
+    await conversationStore.setHistory(channelId, threadTs, userId, result.messages);
   } catch (e) {
     logger.error(`Failed to handle app mention: ${e}`);
     await say({
