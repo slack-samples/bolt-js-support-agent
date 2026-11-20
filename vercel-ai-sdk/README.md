@@ -179,6 +179,65 @@ npm start
 
 </details>
 
+<details><summary><strong>Using OAuth locally with Vercel (with ngrok)</strong></summary>
+
+#### OAuth with `vercel dev`
+
+This mode runs `app-vercel.js` on your machine with [`vercel dev`](https://vercel.com/docs/cli/dev), the same HTTP and OAuth code that runs on Vercel, so you can connect the Slack MCP Server before you deploy.
+
+1. Install [ngrok](https://ngrok.com/download) and start a tunnel:
+
+```sh
+ngrok http 3000
+```
+
+2. Copy the `https://*.ngrok-free.app` URL from the ngrok output.
+
+3. Link this directory to a Vercel project, and create a private [Vercel Blob](https://vercel.com/docs/vercel-blob) store for OAuth installations that's connected to the Development environment:
+
+```sh
+npx vercel link
+npx vercel blob create-store my-casey-agent --access private --environment development --environment production
+```
+
+If you already created a store while deploying, connect it to the Development environment from the project's _Storage_ tab instead.
+
+4. Download the Development environment to `.env.local`. It holds the Blob store's credentials and an AI Gateway token that lasts 12 hours:
+
+```sh
+npx vercel env pull
+```
+
+Remove `AI_GATEWAY_API_KEY` from `.env` to use that token, or keep your own key there.
+
+5. Create a local dev app over HTTP:
+   - Set `socket_mode_enabled` to `false` in `manifest.json`
+   - Replace `your-project.vercel.app` with your ngrok domain (e.g. `YOUR_NGROK_SUBDOMAIN.ngrok-free.app`)
+   - Create the app with `slack install -E local`
+
+6. Add the app's values to `.env`. Run `slack app settings` to open App Settings, then copy the **Signing Secret**, **Client ID**, and **Client Secret** from _Basic Information_. `SLACK_BOT_TOKEN` is optional, from _OAuth & Permissions_, and lets the app reply before anyone completes OAuth. Set `SLACK_STATE_SECRET` to a long random string, such as the output of `openssl rand -hex 32`.
+
+```sh
+SLACK_SIGNING_SECRET=YOUR_SIGNING_SECRET
+SLACK_CLIENT_ID=YOUR_CLIENT_ID
+SLACK_CLIENT_SECRET=YOUR_CLIENT_SECRET
+SLACK_REDIRECT_URI=https://YOUR_NGROK_SUBDOMAIN.ngrok-free.app/slack/oauth_redirect
+SLACK_STATE_SECRET=YOUR_RANDOM_STRING
+SLACK_BOT_TOKEN=YOUR_SLACK_BOT_TOKEN
+```
+
+7. Start the development server:
+
+```sh
+npx vercel dev
+```
+
+8. Open `https://YOUR_NGROK_SUBDOMAIN.ngrok-free.app/slack/install` to install the app with OAuth and connect the Slack MCP Server.
+
+> **Note:** Each time ngrok restarts, it generates a new URL. You'll need to update the ngrok domain in `manifest.json` and `SLACK_REDIRECT_URI` in your `.env`, and re-install the app.
+
+</details>
+
 <details><summary><strong>Deploy to Vercel</strong></summary>
 
 #### Deploy to Vercel
@@ -268,7 +327,7 @@ npm test
 
 ### `app-vercel.js`
 
-`app-vercel.js` is an alternative entry point that runs the app over HTTP on Vercel instead of Socket Mode. This is intended for deployments that use OAuth for app distribution. See the Deploy to Vercel section under Development for setup instructions.
+`app-vercel.js` is an alternative entry point that runs the app over HTTP on Vercel instead of Socket Mode. This is intended for deployments that use OAuth for app distribution, and `npx vercel dev` runs the same entry point locally. See the Using OAuth locally with Vercel and Deploy to Vercel sections under Development for setup instructions.
 
 ### `api/slack/`
 
