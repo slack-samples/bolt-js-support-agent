@@ -8,7 +8,7 @@ A monorepo with three functionally identical implementations of Casey, an IT sup
 
 - `claude-agent-sdk/`: Claude Agent SDK
 - `openai-agents-sdk/`: OpenAI Agents SDK
-- `vercel/`: Vercel AI SDK, deployed to Vercel
+- `vercel-ai-sdk/`: Vercel AI SDK, deployed to Vercel
 
 Work and run commands inside one of them. Keep the three in parity: a user-facing change to one usually belongs in the others.
 

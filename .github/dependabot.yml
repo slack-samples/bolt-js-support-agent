@@ -4,7 +4,7 @@ updates:
     directories:
       - "/openai-agents-sdk"
       - "/claude-agent-sdk"
-      - "/vercel"
+      - "/vercel-ai-sdk"
     schedule:
       interval: "weekly"
     labels:

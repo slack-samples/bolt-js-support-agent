@@ -96,7 +96,7 @@ slack login
 #### Initializing the project
 
 ```sh
-slack create my-casey-agent --template slack-samples/bolt-js-support-agent --subdir vercel
+slack create my-casey-agent --template slack-samples/bolt-js-support-agent --subdir vercel-ai-sdk
 cd my-casey-agent
 ```
 
@@ -133,7 +133,7 @@ SLACK_APP_TOKEN=YOUR_SLACK_APP_TOKEN
 
 ```sh
 git clone https://github.com/slack-samples/bolt-js-support-agent.git my-casey-agent
-cd my-casey-agent/vercel
+cd my-casey-agent/vercel-ai-sdk
 ```
 
 </details>
